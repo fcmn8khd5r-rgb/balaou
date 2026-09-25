@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import contenu from '../data/contenu.json';
+import { t, type Lang } from '../i18n';
+const langue: Lang = 'fr';
+const a = contenu.avis;
+---
+<Base langue={langue} page="avis" titre="Avis — Balaou Croisières"
+      description="Ce que les passagers écrivent après une sortie. Avis inventés : Balaou Croisières est une démonstration.">
+  <section class="section">
+    <div class="coque">
+      <div class="bande">
+        <p class="bande__rail">{t(a.rail, langue)}</p>
+        <h1 class="bande__titre">{t(a.titre, langue)}</h1>
+        <p class="bande__lead">{t(a.mention, langue)}</p>
+      </div>
+      <ul class="avis">
+        {a.items.map((v) => (
+          <li class="avis__item monte">
+            <blockquote><p>{t(v.texte, langue)}</p></blockquote>
+            <p class="avis__qui">{v.nom} · {t(v.origine, langue)}</p>
+            <p class="avis__quoi">{t(v.sortie, langue)}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+<style>
+  .avis {
+    list-style: none; padding: 0; display: grid; gap: clamp(1rem, 2.5vw, 1.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  }
+  .avis__item {
+    border: 1px solid var(--trait); border-radius: var(--rayon);
+    padding: 1.25rem; background: var(--fond); min-width: 0;
+  }
+  .avis__item blockquote p { font-size: var(--t-lead); text-wrap: pretty; }
+  .avis__qui { font-family: var(--titre); font-weight: 600; margin-top: 1rem; }
+  .avis__quoi { color: var(--encre-3); font-size: var(--t-petit); }
+</style>

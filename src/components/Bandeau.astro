@@ -1,0 +1,44 @@
+---
+/**
+ * LA MENTION DE DÉMONSTRATION.
+ *
+ * Elle se lit avant tout le reste, en tête de document, et dit les deux choses
+ * qui comptent : c'est une démonstration, et l'entreprise est inventée. Elle
+ * reste discrète — un filet clair, un corps petit — mais son contraste est
+ * mesuré : encre-2 sur surface, 6,39 pour un seuil de 4,5.
+ */
+import contenu from '../data/contenu.json';
+import { t, type Lang } from '../i18n';
+
+interface Props { langue: Lang }
+const { langue } = Astro.props;
+---
+
+<p class="bandeau">
+  <span class="bandeau__long">{t(contenu.demo.bandeau, langue)}</span>
+  <span class="bandeau__court">{t(contenu.demo.court, langue)}</span>
+</p>
+
+<style>
+  .bandeau {
+    background: var(--surface);
+    border-bottom: 1px solid var(--trait);
+    color: var(--encre-2);
+    font-size: var(--t-petit);
+    text-align: center;
+    /* Hauteur fixe, déclarée dans --bandeau : le héros la retranche. */
+    height: var(--bandeau);
+    display: grid; place-content: center;
+    padding: 0 var(--marge);
+    padding-top: env(safe-area-inset-top, 0px);
+    box-sizing: content-box;
+    line-height: 1.2;
+  }
+  /* Deux formulations selon la place : la longue dit tout, la courte tient sur
+     une ligne à 320 px. Jamais les deux à la fois. */
+  .bandeau__court { display: none; }
+  @media (max-width: 30rem) {
+    .bandeau__long { display: none; }
+    .bandeau__court { display: inline; }
+  }
+</style>

@@ -1,0 +1,95 @@
+---
+/**
+ * UNE SORTIE, EN CARTE.
+ *
+ * Les trois cartes alignent leurs rangs par « subgrid » : leurs textes n'ont
+ * pas la même longueur, et des hauteurs réservées à la main laissaient deux à
+ * dix-sept pixels de dérive selon la largeur. Ici la dérive est nulle par
+ * construction.
+ */
+import { Image } from 'astro:assets';
+import { t, routeSortie, type Lang } from '../i18n';
+import contenu from '../data/contenu.json';
+
+interface Props { sortie: any; photo: ImageMetadata; langue: Lang; priorite?: boolean }
+const { sortie, photo, langue, priorite = false } = Astro.props;
+const u = contenu.ui;
+const prix = new Intl.NumberFormat(langue === 'fr' ? 'fr-FR' : 'en-GB',
+  { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(sortie.prix);
+---
+
+<article class="carte monte">
+  <a class="carte__image" href={routeSortie(sortie.id, langue)} tabindex="-1" aria-hidden="true">
+    <Image src={photo} alt="" widths={[400, 640, 900, 1200]}
+           sizes="(min-width: 60rem) 22rem, (min-width: 40rem) 45vw, 92vw"
+           loading={priorite ? 'eager' : 'lazy'} quality={78} />
+  </a>
+
+  <h3 class="carte__nom">
+    <a href={routeSortie(sortie.id, langue)}>{t(sortie.nom, langue)}</a>
+  </h3>
+
+  <p class="carte__accroche">{t(sortie.accroche, langue)}</p>
+
+  <dl class="carte__faits">
+    <div><dt>{t(u.duree, langue)}</dt><dd>{t(sortie.duree, langue)}</dd></div>
+    <div><dt>{t(u.prix, langue)}</dt><dd>{prix} <span>{t(u.parPersonne, langue)}</span></dd></div>
+    <div><dt>{t(u.places, langue)}</dt><dd>{sortie.capacite}</dd></div>
+  </dl>
+
+  <p class="carte__lien"><span class="carte__cta">{t(u.voir, langue)}</span></p>
+</article>
+
+<style>
+  /* La carte reprend les rangs de la grille parente : les images, les noms,
+     les accroches, les faits et les liens des trois cartes se posent sur les
+     mêmes lignes, quelle que soit la longueur des textes. */
+  .carte {
+    display: grid;
+    grid-row: span 5;
+    grid-template-rows: subgrid;
+    gap: 0;
+    background: var(--fond);
+    border: 1px solid var(--trait);
+    border-radius: var(--rayon);
+    overflow: hidden;
+    transition: border-color 0.25s var(--courbe), transform 0.25s var(--courbe);
+  }
+  .carte:hover { border-color: var(--trait-fort); transform: translateY(-2px); }
+  @media (prefers-reduced-motion: reduce) { .carte:hover { transform: none; } }
+
+  .carte__image { display: block; overflow: hidden; }
+  .carte__image :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+
+  .carte__nom {
+    font-size: var(--t-sous); font-weight: 400;
+    padding: 1.1rem 1.25rem 0;
+  }
+  .carte__nom a { text-decoration: none; }
+  .carte__nom a::after { content: ''; position: absolute; inset: 0; }  /* toute la carte est cliquable */
+  .carte { position: relative; }
+
+  .carte__accroche {
+    color: var(--encre-2); padding: 0.5rem 1.25rem 0; min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .carte__faits {
+    display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem;
+    padding: 1rem 1.25rem 0; margin-top: auto;
+  }
+  .carte__faits div { min-width: 0; }
+  .carte__faits dt {
+    font-family: var(--titre); font-size: var(--t-rail); font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--encre-3);
+  }
+  .carte__faits dd { font-size: var(--t-menu); }
+  .carte__faits dd span { color: var(--encre-3); font-size: var(--t-petit); }
+
+  .carte__lien { padding: 1rem 1.25rem 1.25rem; }
+  .carte__cta {
+    font-family: var(--titre); font-size: var(--t-menu); font-weight: 600;
+    color: var(--lagon);
+  }
+  .carte:hover .carte__cta { text-decoration: underline; text-underline-offset: 3px; }
+</style>

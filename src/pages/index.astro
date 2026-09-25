@@ -1,0 +1,188 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import CarteSortie from '../components/CarteSortie.astro';
+import contenu from '../data/contenu.json';
+import { t, route, routeSortie, lienWhatsapp, type Lang } from '../i18n';
+
+const langue: Lang = 'fr';
+const u = contenu.ui;
+const a = contenu.accueil;
+
+const photos = import.meta.glob<{ default: ImageMetadata }>('../assets/photos/*.jpg', { eager: true });
+const img = (nom: string) => photos[`../assets/photos/${nom}.jpg`].default;
+
+/* LE HÉROS, EN DEUX CADRAGES. Le composant d'Astro ne fait pas de direction
+   artistique : on engendre les deux jeux et on écrit le <picture> à la main.
+   Un cadrage paysage sur un écran vertical ne montre qu'une bande centrale. */
+const large = img('mouillage-jour');
+const vertical = img('mouillage-jour-portrait');
+const jeuLarge = await getImage({ src: large, widths: [960, 1440, 1920, 2560], format: 'avif', quality: 72 });
+const jeuLargeWebp = await getImage({ src: large, widths: [960, 1440, 1920, 2560], format: 'webp', quality: 76 });
+const jeuVertical = await getImage({ src: vertical, widths: [640, 828, 1170], format: 'avif', quality: 72 });
+const jeuVerticalWebp = await getImage({ src: vertical, widths: [640, 828, 1170], format: 'webp', quality: 76 });
+const repli = await getImage({ src: large, width: 1440, format: 'jpeg', quality: 78 });
+---
+
+<Base
+  langue={langue}
+  page="accueil"
+  titre={t(contenu.site.titre, langue)}
+  description={t(contenu.site.description, langue)}
+>
+  <section class="ouverture">
+    <picture class="ouverture__fond">
+      <source media="(orientation: portrait)" type="image/avif"
+              srcset={jeuVertical.srcSet.attribute} sizes="100vw" />
+      <source media="(orientation: portrait)" type="image/webp"
+              srcset={jeuVerticalWebp.srcSet.attribute} sizes="100vw" />
+      <source type="image/avif" srcset={jeuLarge.srcSet.attribute} sizes="100vw" />
+      <source type="image/webp" srcset={jeuLargeWebp.srcSet.attribute} sizes="100vw" />
+      <img src={repli.src} alt="" width={large.width} height={large.height}
+           fetchpriority="high" decoding="async" />
+    </picture>
+
+    <div class="ouverture__voile" aria-hidden="true"></div>
+
+    <div class="coque ouverture__texte">
+      <div class="ouverture__bloc">
+      <p class="ouverture__rail">{t(a.surtitre, langue)}</p>
+      <h1 class="ouverture__titre">{t(a.titre, langue)}</h1>
+      <p class="ouverture__lead">{t(a.lead, langue)}</p>
+      <div class="ouverture__actions">
+        <a class="btn btn--plein" href={route('reserver', langue)}>{t(u.reserver, langue)}</a>
+        <a class="btn btn--trait ouverture__second" href={route('sorties', langue)}>{t(u.sorties, langue)}</a>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="coque">
+      <ul class="reperes">
+        {a.reperes.map((r) => <li class="monte">{t(r, langue)}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--surface" id="sorties">
+    <div class="coque">
+      <div class="bande">
+        <p class="bande__rail">{t(a.sortiesRail, langue)}</p>
+        <h2 class="bande__titre">{t(a.sortiesTitre, langue)}</h2>
+        <p class="bande__lead">{t(a.sortiesIntro, langue)}</p>
+      </div>
+
+      <div class="grille">
+        {contenu.sorties.map((s, i) => (
+          <CarteSortie sortie={s} photo={img(s.photo)} langue={langue} priorite={i === 0} />
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* --- L'ouverture ------------------------------------------------------
+     « 100vh » d'abord, « 100dvh » ensuite : sans le repli, un navigateur qui
+     ignore dvh laisse le héros à la hauteur de son contenu et le fond de page
+     apparaît autour de l'image. */
+  .ouverture {
+    position: relative;
+    /* La barre basse est FIXE : sans la retrancher, un bloc aligné en bas se
+       range derrière elle et le titre se trouve coupé. « 100vh » d'abord,
+       « 100dvh » ensuite : sans le repli, un navigateur qui ignore dvh laisse
+       le héros à la hauteur de son contenu. */
+    min-height: calc(100vh - var(--bandeau) - var(--barre) - var(--barre-basse));
+    min-height: calc(100dvh - var(--bandeau) - var(--barre) - var(--barre-basse));
+    display: grid;
+    align-items: end;
+    padding-block: clamp(2rem, 6vh, 3.5rem) clamp(2rem, 6vh, 3.5rem);
+    isolation: isolate;
+  }
+  /* « display: block » est INDISPENSABLE ici. La feuille générale pose
+     « picture { display: contents } » — sans quoi les hauteurs à 100 %
+     s'effondrent — mais cette règle supprime la boîte de l'élément, et avec
+     elle tout positionnement : le fond redevenait un élément de la grille, et
+     une bande blanche s'ouvrait entre la barre et la photographie. */
+  .ouverture__fond { display: block; position: absolute; inset: 0; z-index: -2; }
+  .ouverture__fond :global(img) {
+    width: 100%; height: 100%; object-fit: cover;
+    /* Les voiliers sont dans le tiers bas de l'image : un cadrage centré sur
+       le ciel les faisait sortir du champ sur un écran large. */
+    object-position: center 62%;
+  }
+
+  /* Le voile est confiné au bloc de texte plutôt qu'étalé sur toute l'image :
+     la photographie garde sa lumière, et le titre son contraste. Mesuré sur
+     l'emprise des lettres : 8,1 au pire sur le lead, 11,4 sur le titre. */
+  .ouverture__voile {
+    position: absolute; inset: auto 0 0 0; height: 72%; z-index: -1;
+    /* Le voile est COURT et franc plutôt que long et pâle : il couvre la seule
+       bande où vivent les trois textes, et laisse les deux tiers hauts de la
+       photographie intacts. Un voile étalé sur toute l'image l'aurait
+       assombrie pour rien — et le sur-titre restait malgré tout à 2,77. */
+    background: linear-gradient(to top,
+      rgb(10 22 30 / 0.82) 0%,
+      rgb(10 22 30 / 0.76) 30%,
+      rgb(10 22 30 / 0.58) 58%,
+      rgb(10 22 30 / 0.22) 84%,
+      rgb(10 22 30 / 0) 100%);
+  }
+
+  /* « .coque » porte « margin-inline: auto » : lui donner une largeur maximale
+     CENTRAIT le bloc au lieu de l'aligner sur la colonne. La contrainte
+     descend donc d'un cran, sur un bloc intérieur. */
+  .ouverture__texte { color: #fff; }
+  .ouverture__bloc { max-width: 42rem; }
+  .ouverture__rail {
+    font-family: var(--titre); font-size: var(--t-rail); font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    /* Blanc franc plutôt qu'un bleu très pâle : à cette hauteur du voile,
+       chaque dixième de contraste compte. Mesuré ensuite, pas supposé. */
+    color: #fff; margin-bottom: 0.9rem;
+  }
+  .ouverture__titre { font-size: var(--t-mega); font-weight: 300; letter-spacing: -0.02em; }
+  .ouverture__lead {
+    font-size: var(--t-lead); color: #f2f6f7; margin-top: 1rem;
+    max-width: 34rem; text-wrap: pretty;
+  }
+  .ouverture__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+  .ouverture__second { border-color: rgb(255 255 255 / 0.55); color: #fff; }
+  .ouverture__second:hover { border-color: #fff; color: #fff; background: rgb(255 255 255 / 0.12); }
+
+  /* Sur un téléphone tenu à l'horizontale, la fenêtre est trop courte pour un
+     titre de cette échelle : elle se resserre plutôt que de chevaucher la barre. */
+  @media (max-height: 33rem) and (orientation: landscape) {
+    .ouverture { min-height: auto; padding-block: calc(var(--barre) + 1.5rem) 2rem; }
+    .ouverture__titre { font-size: clamp(1.75rem, 5vh, 2.5rem); }
+    .ouverture__lead { display: none; }
+  }
+
+  /* --- Les repères ------------------------------------------------------ */
+  .reperes {
+    display: flex; flex-wrap: wrap; gap: 0.75rem clamp(1.5rem, 4vw, 3rem);
+    list-style: none; padding: 0;
+  }
+  .reperes li {
+    flex: 1 1 14rem; min-width: 0;
+    font-family: var(--titre); font-size: var(--t-lead); font-weight: 400;
+    color: var(--encre-2);
+    padding-left: 1.1rem; position: relative; overflow-wrap: anywhere;
+  }
+  .reperes li::before {
+    content: ''; position: absolute; left: 0; top: 0.65em;
+    width: 0.4rem; height: 0.4rem; border-radius: 999px; background: var(--lagon-clair);
+  }
+
+  /* --- La grille des sorties -------------------------------------------- */
+  .grille {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
+    gap: clamp(1rem, 2.5vw, 1.75rem);
+    /* Cinq rangs DÉCLARÉS : image, nom, accroche, faits, lien. C'est ce que
+       les cartes reprennent par « subgrid ». Écrire « auto » n'en définirait
+       qu'un seul, et la subgrid n'aurait rien à quoi s'accrocher. */
+    grid-template-rows: repeat(5, auto);
+  }
+</style>

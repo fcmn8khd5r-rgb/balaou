@@ -1,0 +1,143 @@
+---
+/**
+ * LA BARRE HAUTE.
+ *
+ * Un visiteur pressé doit voir où cliquer sans réfléchir : les sorties, et le
+ * bouton de réservation, plein, à droite. Sur téléphone le menu est un
+ * <details> — il s'ouvre donc SANS JavaScript, et le contenu existe dans la
+ * page quoi qu'il arrive.
+ *
+ * Le retrait d'encoche est appliqué à UN SEUL niveau. Posé à la fois sur le
+ * corps et sur la barre, il se comptait deux fois : en paysage sur iPhone, le
+ * logo se retrouvait à 151 px du bord pour 59 attendus.
+ */
+import contenu from '../data/contenu.json';
+import { t, route, lienWhatsapp, type Lang } from '../i18n';
+
+interface Props { langue: Lang; page: string }
+const { langue, page } = Astro.props;
+const u = contenu.ui;
+
+const liens = [
+  { cle: 'sorties' as const, texte: t(u.sorties, langue) },
+  { cle: 'galerie' as const, texte: t(u.galerie, langue) },
+  { cle: 'avis' as const, texte: t(u.avis, langue) },
+  { cle: 'questions' as const, texte: t(u.questions, langue) },
+];
+const autre: Lang = langue === 'fr' ? 'en' : 'fr';
+---
+
+<header class="tete">
+  <div class="tete__coque coque">
+    <a class="marque" href={route('accueil', langue)}>
+      <span class="marque__nom">Balaou</span>
+      <span class="marque__suite">Croisières</span>
+    </a>
+
+    <nav class="tete__nav" aria-label={t(u.navPrincipale, langue)}>
+      {liens.map((l) => (
+        <a href={route(l.cle, langue)} aria-current={page === l.cle ? 'page' : undefined}>{l.texte}</a>
+      ))}
+    </nav>
+
+    <div class="tete__actions">
+      <a class="tete__langue" href={route(page === 'accueil' ? 'accueil' : 'accueil', autre)} hreflang={autre} lang={autre}>
+        {autre === 'en' ? 'EN' : 'FR'}
+      </a>
+      <a class="btn btn--plein tete__reserver" href={route('reserver', langue)}>{t(u.reserver, langue)}</a>
+
+      <details class="tiroir">
+        <summary class="tiroir__bouton" aria-label={t(u.menu, langue)}>
+          <span class="tiroir__barres" aria-hidden="true"><i></i><i></i><i></i></span>
+        </summary>
+        <nav class="tiroir__panneau" aria-label={t(u.navPrincipale, langue)}>
+          {liens.map((l) => <a href={route(l.cle, langue)}>{l.texte}</a>)}
+          <a href={lienWhatsapp(langue)} rel="noopener">{t(u.ecrire, langue)}</a>
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<style>
+  .tete {
+    position: sticky; top: 0; z-index: 60;
+    background: var(--fond);
+    border-bottom: 1px solid var(--trait);
+    /* Pas de « backdrop-filter » : il force une recomposition à chaque image
+       de défilement, très coûteuse sur iOS. */
+  }
+  .tete__coque {
+    display: flex; align-items: center; gap: clamp(0.75rem, 2vw, 2rem);
+    min-height: var(--barre);
+  }
+
+  .marque {
+    display: inline-flex; align-items: baseline; gap: 0.4rem;
+    font-family: var(--titre); text-decoration: none; line-height: 1;
+    margin-right: auto;
+  }
+  .marque__nom { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.02em; }
+  .marque__suite {
+    font-size: var(--t-rail); font-weight: 400; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--lagon);
+  }
+  @media (max-width: 22rem) { .marque__suite { display: none; } }
+
+  .tete__nav { display: none; gap: clamp(1rem, 2.2vw, 2rem); }
+  .tete__nav a {
+    font-family: var(--titre); font-size: var(--t-menu); font-weight: 400;
+    text-decoration: none; color: var(--encre-2);
+    padding-block: 0.75rem; position: relative;
+  }
+  .tete__nav a:hover { color: var(--encre); }
+  .tete__nav a[aria-current='page'] { color: var(--encre); }
+  .tete__nav a[aria-current='page']::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0.45rem;
+    height: 1px; background: var(--lagon);
+  }
+
+  .tete__actions { display: flex; align-items: center; gap: 0.5rem; }
+  .tete__langue {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 2.5rem; min-height: 2.5rem;
+    font-family: var(--titre); font-size: var(--t-petit); font-weight: 600;
+    letter-spacing: 0.06em; text-decoration: none; color: var(--encre-2);
+    border: 1px solid var(--trait-fort); border-radius: 999px;
+  }
+  .tete__langue:hover { color: var(--lagon); border-color: var(--lagon); }
+
+  /* Le bouton de réservation de la barre est réservé à l'ordinateur : sur
+     téléphone, il vit dans la barre basse, toujours sous le pouce. */
+  .tete__reserver { display: none; }
+
+  .tiroir { position: relative; }
+  .tiroir__bouton {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.75rem; height: 2.75rem; cursor: pointer; list-style: none;
+    border: 1px solid var(--trait-fort); border-radius: 999px;
+  }
+  .tiroir__bouton::-webkit-details-marker { display: none; }
+  .tiroir__barres { display: grid; gap: 4px; }
+  .tiroir__barres i { display: block; width: 18px; height: 1.5px; background: var(--encre); }
+  .tiroir[open] .tiroir__barres i:nth-child(2) { opacity: 0; }
+
+  .tiroir__panneau {
+    position: absolute; right: 0; top: calc(100% + 0.6rem);
+    display: grid; gap: 0.25rem; min-width: 13rem;
+    background: var(--fond); border: 1px solid var(--trait);
+    border-radius: var(--rayon); padding: 0.5rem;
+    box-shadow: 0 12px 32px rgb(22 36 46 / 0.10);
+  }
+  .tiroir__panneau a {
+    font-family: var(--titre); font-size: var(--t-menu); text-decoration: none;
+    padding: 0.7rem 0.85rem; border-radius: 0.5rem; color: var(--encre);
+  }
+  .tiroir__panneau a:hover { background: var(--surface); color: var(--lagon); }
+
+  @media (min-width: 60rem) {
+    .tete__nav { display: flex; }
+    .tete__reserver { display: inline-flex; }
+    .tiroir { display: none; }
+  }
+</style>

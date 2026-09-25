@@ -1,0 +1,69 @@
+---
+import contenu from '../data/contenu.json';
+import { t, route, lienWhatsapp, type Lang } from '../i18n';
+
+interface Props { langue: Lang }
+const { langue } = Astro.props;
+const u = contenu.ui;
+const liens = [
+  { cle: 'sorties' as const, texte: t(u.sorties, langue) },
+  { cle: 'galerie' as const, texte: t(u.galerie, langue) },
+  { cle: 'avis' as const, texte: t(u.avis, langue) },
+  { cle: 'questions' as const, texte: t(u.questions, langue) },
+  { cle: 'reserver' as const, texte: t(u.reserver, langue) },
+  { cle: 'mentions' as const, texte: langue === 'fr' ? 'Mentions légales' : 'Legal notice' },
+];
+---
+
+<footer class="pied">
+  <div class="coque pied__coque">
+    <div class="pied__marque">
+      <p class="pied__nom">Balaou <span>Croisières</span></p>
+      <p class="pied__ligne">{t(contenu.pied.marque, langue)}</p>
+      <p class="pied__ligne">{contenu.site.base}</p>
+      <a class="btn btn--vert pied__wa" href={lienWhatsapp(langue)} rel="noopener">{t(u.ecrire, langue)}</a>
+    </div>
+
+    <nav class="pied__nav" aria-label={t(u.navPied, langue)}>
+      {liens.map((l) => <a href={route(l.cle, langue)}>{l.texte}</a>)}
+    </nav>
+  </div>
+
+  <div class="coque pied__bas">
+    <p>{t(contenu.pied.editeur, langue)}</p>
+    <p>{t(contenu.pied.droits, langue)}</p>
+  </div>
+</footer>
+
+<style>
+  .pied { background: var(--surface); border-top: 1px solid var(--trait); margin-top: var(--sp-section); }
+  .pied__coque {
+    display: flex; flex-wrap: wrap; gap: var(--sp-bloc) clamp(2rem, 6vw, 5rem);
+    align-items: baseline;
+    padding-block: var(--sp-section) var(--sp-bloc);
+  }
+  .pied__marque { flex: 1 1 18rem; min-width: 0; }
+  .pied__nom {
+    font-family: var(--titre); font-size: 1.35rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1;
+  }
+  .pied__nom span {
+    font-size: var(--t-rail); font-weight: 400; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--lagon);
+  }
+  .pied__ligne { color: var(--encre-2); font-size: var(--t-petit); margin-top: 0.4rem; }
+  .pied__wa { margin-top: 1rem; }
+
+  .pied__nav { flex: 0 1 auto; display: grid; gap: 0.35rem; }
+  .pied__nav a {
+    font-family: var(--titre); font-size: var(--t-menu); text-decoration: none;
+    color: var(--encre-2); padding-block: 0.3rem;
+  }
+  .pied__nav a:hover { color: var(--lagon); }
+
+  .pied__bas {
+    display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem;
+    border-top: 1px solid var(--trait); padding-block: 1rem var(--sp-bloc);
+    color: var(--encre-3); font-size: var(--t-petit);
+  }
+</style>

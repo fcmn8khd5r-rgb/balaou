@@ -1,0 +1,122 @@
+[
+ {
+  "de": "IMG_0515",
+  "vers": "mouillage-jour",
+  "role": "accueil",
+  "legende": {
+   "fr": "Voiliers au mouillage, en fin de matinée",
+   "en": "Yachts at anchor, late morning"
+  },
+  "largeur": 4032,
+  "hauteur": 3024,
+  "pivote": false
+ },
+ {
+  "de": "IMG_3337",
+  "vers": "ilet-turquoise",
+  "role": "lagon",
+  "legende": {
+   "fr": "Un îlet posé sur le lagon",
+   "en": "An islet on the lagoon"
+  },
+  "largeur": 3024,
+  "hauteur": 4032,
+  "pivote": true
+ },
+ {
+  "de": "IMG_3322",
+  "vers": "anse-claire",
+  "role": "lagon",
+  "legende": {
+   "fr": "L'anse, par ciel bleu",
+   "en": "The cove under a blue sky"
+  },
+  "largeur": 3024,
+  "hauteur": 4032,
+  "pivote": true
+ },
+ {
+  "de": "IMG_3321",
+  "vers": "ressac-sable",
+  "role": "galerie",
+  "legende": {
+   "fr": "Le ressac sur le sable clair",
+   "en": "Surf on pale sand"
+  },
+  "largeur": 3024,
+  "hauteur": 4032,
+  "pivote": true
+ },
+ {
+  "de": "IMG_3319",
+  "vers": "baie-midi",
+  "role": "galerie",
+  "legende": {
+   "fr": "La baie au soleil haut",
+   "en": "The bay at high sun"
+  },
+  "largeur": 3024,
+  "hauteur": 4032,
+  "pivote": true
+ },
+ {
+  "de": "IMG_0845",
+  "vers": "mouillage-couchant",
+  "role": "couchant",
+  "legende": {
+   "fr": "Le mouillage au couchant",
+   "en": "The anchorage at sunset"
+  },
+  "largeur": 4032,
+  "hauteur": 3024,
+  "pivote": false
+ },
+ {
+  "de": "IMG_0848",
+  "vers": "voiliers-or",
+  "role": "couchant",
+  "legende": {
+   "fr": "Voiliers sur un horizon doré",
+   "en": "Yachts against a golden horizon"
+  },
+  "largeur": 4032,
+  "hauteur": 3024,
+  "pivote": false
+ },
+ {
+  "de": "IMG_3842",
+  "vers": "catamaran-soir",
+  "role": "couchant",
+  "legende": {
+   "fr": "Un catamaran dans la lumière du soir",
+   "en": "A catamaran in the evening light"
+  },
+  "largeur": 3024,
+  "hauteur": 4032,
+  "pivote": true
+ },
+ {
+  "de": "IMG_0842",
+  "vers": "rade-mauve",
+  "role": "galerie",
+  "legende": {
+   "fr": "La rade, juste après le soleil",
+   "en": "The roadstead, just after sundown"
+  },
+  "largeur": 4032,
+  "hauteur": 3024,
+  "pivote": false
+ },
+ {
+  "de": "IMG_5698",
+  "vers": "plage-amandiers",
+  "role": "galerie",
+  "legende": {
+   "fr": "La plage sous les amandiers",
+   "en": "The beach beneath the almond trees"
+  },
+  "largeur": 4284,
+  "hauteur": 5712,
+  "pivote": true
+ }
+]

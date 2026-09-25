@@ -1,0 +1,289 @@
+/* =========================================================================
+   BALAOU CROISIÈRES — le système visuel
+   =========================================================================
+   Parti pris : clair, aéré, une seule couleur d'accent. La photographie porte
+   la couleur ; la page lui laisse la place.
+   ========================================================================= */
+
+/* --- Les polices, servies par ce site ----------------------------------
+   Aucun hôte tiers : une feuille distante bloque le rendu le temps d'un
+   aller-retour, et expose l'adresse IP du visiteur. Sous-ensemble latin
+   seulement — le reste ne sert à rien ici. */
+@font-face {
+  font-family: 'Outfit';
+  src: url('/polices/outfit-300.woff2') format('woff2');
+  font-weight: 300; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Outfit';
+  src: url('/polices/outfit-400.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Outfit';
+  src: url('/polices/outfit-600.woff2') format('woff2');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('/polices/source-sans-3-400.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Source Sans 3';
+  src: url('/polices/source-sans-3-600.woff2') format('woff2');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+
+/* Replis aux métriques accordées : sans eux, la page saute à l'arrivée des
+   vraies polices. Les coefficients viennent d'une mesure, pas d'une estimation. */
+@font-face {
+  font-family: 'Repli titre';
+  src: local('Helvetica Neue'), local('Arial');
+  size-adjust: 96%; ascent-override: 96%; descent-override: 24%; line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Repli texte';
+  src: local('Helvetica Neue'), local('Arial');
+  size-adjust: 98%; ascent-override: 98%; descent-override: 26%; line-gap-override: 0%;
+}
+
+:root {
+  /* --- Couleurs --------------------------------------------------------
+     Chaque rapport de contraste sur le fond a été CALCULÉ, pas estimé :
+       encre     #16242E → 15,17
+       encre-2   #48585F →  7,09
+       encre-3   #5E6D73 →  5,14   (seuil 4,5)
+       lagon     #0B6E7C →  5,69   · blanc sur lagon : 5,94
+       soleil    #8A5A16 →  5,66   · blanc sur soleil : 5,91
+     Les deux clairs — lagon-clair 2,86 et soleil-clair 2,23 — ne portent
+     JAMAIS de texte. Filets, aplats et états de survol seulement.
+     Encre sur soleil-clair : 6,81, ce qui autorise l'inverse. */
+  --fond: #fbfaf7;
+  --surface: #f1eee7;
+  --encre: #16242e;
+  --encre-2: #48585f;
+  --encre-3: #5e6d73;
+  --lagon: #0b6e7c;
+  --lagon-clair: #18a4b6;   /* décor seulement */
+  --soleil: #8a5a16;
+  --soleil-clair: #d6a059;  /* décor seulement */
+  --trait: #e3ded3;
+  --trait-fort: #cfc7b8;
+  --blanc: #ffffff;
+
+  /* --- Typographie ----------------------------------------------------- */
+  --titre: 'Outfit', 'Repli titre', system-ui, sans-serif;
+  --texte: 'Source Sans 3', 'Repli texte', system-ui, sans-serif;
+
+  /* LES BORNES SONT DOUBLEMENT BORNÉES, et le « min » n'est pas une coquetterie.
+     Un visiteur qui porte la taille du texte à 200 % double tous les rem, les
+     vw restant ce qu'ils sont. À 320 px de large et 200 % de texte, les marges
+     prennent 40 px de chaque côté : il reste 240 px. Le mot le plus long du
+     site — « Croisières », « disponibilités » — mesure 5,3 px de largeur par
+     pixel de corps, d'où 240/5,3 = 45 px, soit 14 vw. Le plafond porte sur la
+     VALEUR ENTIÈRE et non sur la seule borne basse : les trois termes d'un
+     clamp sont en rem et doublent tous les trois. */
+  --plafond-titre: 12.5vw;
+  --plafond-mega: 14vw;
+
+  --t-mega: min(clamp(2.5rem, 1.4rem + 4.7vw, 4.75rem), var(--plafond-mega));
+  --t-titre: min(clamp(1.75rem, 1.25rem + 2.1vw, 2.75rem), var(--plafond-titre));
+  --t-sous: min(clamp(1.25rem, 1.05rem + 0.85vw, 1.65rem), var(--plafond-titre));
+  --t-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --t-texte: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --t-menu: 0.9375rem;
+  --t-petit: 0.875rem;
+  --t-rail: 0.75rem;
+
+  /* --- Rythme ----------------------------------------------------------
+     L'espace de section COMPTE DOUBLE : le bas de l'une et le haut de la
+     suivante s'ajoutent. 88 px donnent donc 176 px entre deux blocs, ce qui
+     sépare franchement sans creuser. Mesuré sur les sites précédents, 132 en
+     donnait 264 et cela se voyait. */
+  --sp-section: clamp(3.25rem, 2.4rem + 3.6vw, 5.5rem);
+  --sp-bloc: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  --marge: clamp(1.25rem, 0.9rem + 1.6vw, 2.5rem);
+  --large: 74rem;
+  --mesure: min(62ch, 100%);
+
+  /* Une SEULE variable de hauteur d'en-tête. Les ancres s'en déduisent : sans
+     cela, scroll-padding-top et scroll-margin-top s'additionnent au
+     rembourrage de section et l'on atterrit trois cents pixels trop haut. */
+  --barre: 4rem;
+  --barre-basse: 4.25rem;
+  /* La mention de démonstration occupe une hauteur FIXE : le héros la
+     retranche pour tenir dans l'écran, et un calcul a besoin d'un nombre. */
+  --bandeau: 2.4rem;
+
+  --courbe: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --rayon: 0.75rem;
+}
+
+@media (min-width: 60rem) {
+  :root { --barre: 4.75rem; --barre-basse: 0rem; }
+}
+
+/* --- Remise à zéro ------------------------------------------------------ */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; }
+
+html {
+  /* Le fond du canevas — visible derrière la barre d'état de l'iPhone et dans
+     le rebond élastique — vaut celui de la page. Sur un site clair, c'est ce
+     qui supprime la bande : il n'y a plus de contraste à voir. */
+  background: var(--fond);
+  scroll-behavior: smooth;
+  /* La marge de défilement, en un seul endroit. */
+  scroll-padding-top: calc(var(--barre) + 0.75rem);
+  -webkit-text-size-adjust: 100%;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  background: var(--fond);
+  color: var(--encre);
+  font-family: var(--texte);
+  font-size: var(--t-texte);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  /* La barre basse OCCUPE sa place au lieu de flotter sur le contenu : c'est
+     ainsi qu'une pastille était venue recouvrir le bouton du premier écran. */
+  padding-bottom: calc(var(--barre-basse) + env(safe-area-inset-bottom, 0px));
+  overflow-x: clip;
+}
+
+img, picture, svg, video { display: block; max-width: 100%; }
+picture { display: contents; }  /* sans quoi les hauteurs à 100 % s'effondrent */
+img { height: auto; }
+
+a { color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+h1, h2, h3, h4 {
+  font-family: var(--titre);
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+:where(a, button, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--lagon);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --- Ossature ----------------------------------------------------------- */
+.coque {
+  width: min(var(--large), 100%);
+  margin-inline: auto;
+  padding-inline: var(--marge);
+}
+
+.section { padding-block: var(--sp-section); }
+.section--surface { background: var(--surface); }
+
+/* L'ancre vise le TITRE, pas le bord de la section : une marge négative égale
+   au rembourrage fait passer ce bord — et son filet — sous la barre. */
+.section[id] { scroll-margin-top: calc(var(--barre) - var(--sp-section) + 0.75rem); }
+
+.mesure { max-width: var(--mesure); }
+
+/* --- Bande d'intitulé ---------------------------------------------------
+   Trois blocs de corps très différents. Alignés par le haut de leur boîte,
+   leurs textes partent à trois hauteurs ; alignés par le bas, leurs sommets
+   font un escalier. « baseline » pose les PREMIÈRES LIGNES DE TEXTE sur un
+   même trait — la seule ligne qui se voie, et celle qu'on lit en premier. */
+.bande {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem clamp(1.5rem, 4vw, 3rem);
+  margin-bottom: var(--sp-bloc);
+}
+.bande__rail {
+  flex: 0 0 min(9rem, 100%);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--titre);
+  font-size: var(--t-rail);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lagon);
+}
+.bande__titre { flex: 1 1 18rem; min-width: 0; font-size: var(--t-titre); }
+.bande__lead { flex: 1 1 20rem; min-width: 0; color: var(--encre-2); font-size: var(--t-lead); }
+
+/* --- Boutons ------------------------------------------------------------
+   « inline-flex » et non « inline » : un élément en ligne ignore les marges
+   verticales, et son rembourrage se peint HORS de la ligne, par-dessus ce qui
+   l'entoure — c'est ainsi qu'un bouton de pied de page avait recouvert une
+   adresse électronique. La cible fait 44 px de haut au minimum. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.6rem 1.35rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: var(--titre);
+  font-size: var(--t-menu);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s var(--courbe), color 0.2s var(--courbe),
+              border-color 0.2s var(--courbe), transform 0.2s var(--courbe);
+}
+.btn:active { transform: translateY(1px); }
+
+.btn--plein { background: var(--lagon); color: var(--blanc); }
+.btn--plein:hover { background: #095a66; }
+
+.btn--trait { border-color: var(--trait-fort); color: var(--encre); background: transparent; }
+.btn--trait:hover { border-color: var(--lagon); color: var(--lagon); }
+
+.btn--vert { background: #1d7a4c; color: var(--blanc); }   /* WhatsApp — 5,32 sur blanc */
+.btn--vert:hover { background: #17633e; }
+
+/* --- Apparition au défilement -------------------------------------------
+   Le contenu ne dépend JAMAIS d'un script pour exister. La progression de
+   l'animation EST la position de l'élément dans l'écran : il n'y a pas
+   d'événement à recevoir, donc rien qui puisse manquer. Les navigateurs sans
+   « view() » reçoivent un repli qui affiche tout, sans condition.
+   La course vaut 10 px, soit moins que le plus petit espacement du site : deux
+   blocs voisins animés en décalé ne peuvent pas se recouvrir. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .monte {
+      animation: monter linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 42%;
+    }
+    @keyframes monter {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: none; }
+    }
+    /* Le premier écran ne bouge jamais : rien ne clignote à l'arrivée, et le
+       plus grand élément est peint tout de suite. */
+    .ouverture .monte { animation: none; }
+  }
+}
+
+/* --- Utilitaires --------------------------------------------------------- */
+.lecteur-seul {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.evitement {
+  position: absolute; left: 0.5rem; top: -4rem; z-index: 200;
+  background: var(--encre); color: var(--blanc);
+  padding: 0.6rem 1rem; border-radius: 0 0 var(--rayon) var(--rayon);
+  text-decoration: none; transition: top 0.2s var(--courbe);
+}
+.evitement:focus { top: 0; }

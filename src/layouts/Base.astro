@@ -1,0 +1,78 @@
+---
+/**
+ * LE GABARIT COMMUN.
+ *
+ * Les balises de tête sont dans le <head> RÉEL : les robots et les aperçus de
+ * partage lisent le document servi, ils n'exécutent aucun script.
+ *
+ * L'adresse canonique et og:url sont ABSOLUES et dérivées de l'adresse du site
+ * — celle que déclare le contenu. Un chemin relatif dans og:image est refusé
+ * par Open Graph, et un partage sort alors sans vignette.
+ */
+import contenu from '../data/contenu.json';
+import { t, route, type Lang, type Cle } from '../i18n';
+import Bandeau from '../components/Bandeau.astro';
+import Entete from '../components/Entete.astro';
+import BarreBasse from '../components/BarreBasse.astro';
+import Pied from '../components/Pied.astro';
+import '../styles/global.css';
+
+interface Props {
+  langue: Lang;
+  page: Cle;
+  titre: string;
+  description: string;
+  /** Adresse équivalente dans l'autre langue, pour hreflang. */
+  jumelle?: string;
+}
+const { langue, page, titre, description, jumelle } = Astro.props;
+
+const site = new URL(Astro.site!);
+const canonique = new URL(Astro.url.pathname, site).href;
+const autre: Lang = langue === 'fr' ? 'en' : 'fr';
+const adresseAutre = new URL(jumelle ?? route(page, autre), site).href;
+const partage = new URL('/partage.jpg', site).href;
+---
+
+<!doctype html>
+<html lang={langue}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{titre}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonique} />
+
+    <link rel="alternate" hreflang={langue} href={canonique} />
+    <link rel="alternate" hreflang={autre} href={adresseAutre} />
+    <link rel="alternate" hreflang="x-default" href={new URL(route(page, 'fr'), site).href} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={contenu.site.nom} />
+    <meta property="og:title" content={titre} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonique} />
+    <meta property="og:image" content={partage} />
+    <meta property="og:locale" content={langue === 'fr' ? 'fr_FR' : 'en_GB'} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- La couleur de la barre du navigateur vaut celle du fond : c'est ce qui
+         supprime la bande visible derrière la barre d'état de l'iPhone. -->
+    <meta name="theme-color" content="#fbfaf7" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link rel="preload" href="/polices/outfit-600.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/polices/source-sans-3-400.woff2" as="font" type="font/woff2" crossorigin />
+  </head>
+
+  <body>
+    <a class="evitement" href="#contenu">{t(contenu.ui.allerContenu, langue)}</a>
+    <Bandeau langue={langue} />
+    <Entete langue={langue} page={page} />
+    <main id="contenu"><slot /></main>
+    <Pied langue={langue} />
+    <BarreBasse langue={langue} />
+  </body>
+</html>

@@ -1,0 +1,460 @@
+{
+  "site": {
+    "nom": "Balaou Croisières",
+    "url": "https://balaoucroisieres.netlify.app",
+    "base": "Marina de Sainte-Rose, Guadeloupe",
+    "titre": {
+      "fr": "Balaou Croisières — sorties en mer",
+      "en": "Balaou Croisières — boat trips"
+    },
+    "description": {
+      "fr": "Sorties en bateau au départ de Sainte-Rose : journée lagon et îlets, snorkeling, coucher de soleil. Douze passagers, réservation directe.",
+      "en": "Boat trips from Sainte-Rose, Guadeloupe: lagoon and islets, snorkelling, sunset. Twelve guests, book direct."
+    }
+  },
+  "demo": {
+    "bandeau": {
+      "fr": "Site de démonstration — Balaou Croisières est une entreprise fictive",
+      "en": "Demonstration site — Balaou Croisières is a fictional company"
+    },
+    "court": {
+      "fr": "Démonstration — entreprise fictive",
+      "en": "Demo — fictional company"
+    }
+  },
+  "contact": {
+    "whatsapp": "590690305037",
+    "messageWhatsapp": {
+      "fr": "Bonjour, je vous écris depuis le site de démonstration Balaou Croisières.",
+      "en": "Hello, I'm writing from the Balaou Croisières demonstration site."
+    },
+    "courriel": "contact@studiomathysbocage.fr"
+  },
+  "ui": {
+    "sorties": {
+      "fr": "Les sorties",
+      "en": "The trips"
+    },
+    "galerie": {
+      "fr": "Galerie",
+      "en": "Gallery"
+    },
+    "avis": {
+      "fr": "Avis",
+      "en": "Reviews"
+    },
+    "questions": {
+      "fr": "Questions",
+      "en": "FAQ"
+    },
+    "reserver": {
+      "fr": "Réserver",
+      "en": "Book"
+    },
+    "reserverCette": {
+      "fr": "Réserver cette sortie",
+      "en": "Book this trip"
+    },
+    "whatsapp": {
+      "fr": "WhatsApp",
+      "en": "WhatsApp"
+    },
+    "ecrire": {
+      "fr": "Écrire sur WhatsApp",
+      "en": "Message on WhatsApp"
+    },
+    "duree": {
+      "fr": "Durée",
+      "en": "Duration"
+    },
+    "prix": {
+      "fr": "Prix",
+      "en": "Price"
+    },
+    "parPersonne": {
+      "fr": "par personne",
+      "en": "per person"
+    },
+    "places": {
+      "fr": "Places",
+      "en": "Guests"
+    },
+    "rdv": {
+      "fr": "Rendez-vous",
+      "en": "Meeting point"
+    },
+    "inclus": {
+      "fr": "Compris dans la sortie",
+      "en": "Included"
+    },
+    "voir": {
+      "fr": "Voir la sortie",
+      "en": "See the trip"
+    },
+    "menu": {
+      "fr": "Menu",
+      "en": "Menu"
+    },
+    "fermer": {
+      "fr": "Fermer",
+      "en": "Close"
+    },
+    "versAnglais": {
+      "fr": "English",
+      "en": "English"
+    },
+    "versFrancais": {
+      "fr": "Français",
+      "en": "Français"
+    },
+    "allerContenu": {
+      "fr": "Aller au contenu",
+      "en": "Skip to content"
+    },
+    "navPrincipale": {
+      "fr": "Navigation principale",
+      "en": "Main navigation"
+    },
+    "navRapide": {
+      "fr": "Réserver ou écrire",
+      "en": "Book or message"
+    },
+    "navPied": {
+      "fr": "Navigation de pied de page",
+      "en": "Footer navigation"
+    }
+  },
+  "accueil": {
+    "surtitre": {
+      "fr": "Sainte-Rose · Grand Cul-de-Sac Marin",
+      "en": "Sainte-Rose · Grand Cul-de-Sac Marin"
+    },
+    "titre": {
+      "fr": "Le lagon, à douze",
+      "en": "The lagoon, twelve of us"
+    },
+    "lead": {
+      "fr": "Un bateau, douze passagers, trois sorties. On part de la marina de Sainte-Rose et l'on rentre avec du sel sur la peau.",
+      "en": "One boat, twelve guests, three trips. We leave from Sainte-Rose marina and come back with salt on our skin."
+    },
+    "reperes": [
+      {
+        "fr": "Douze passagers au maximum",
+        "en": "Twelve guests at most"
+      },
+      {
+        "fr": "Départs toute l'année",
+        "en": "Departures all year"
+      },
+      {
+        "fr": "Acompte de 30 % à la réservation",
+        "en": "30% deposit on booking"
+      }
+    ],
+    "sortiesRail": {
+      "fr": "Les sorties",
+      "en": "The trips"
+    },
+    "sortiesTitre": {
+      "fr": "Trois façons de prendre la mer.",
+      "en": "Three ways to put to sea."
+    },
+    "sortiesIntro": {
+      "fr": "Chacune part de la même marina et se réserve en ligne, avec le nombre de places restantes affiché jour par jour.",
+      "en": "Each leaves from the same marina and books online, with remaining seats shown day by day."
+    }
+  },
+  "sorties": [
+    {
+      "id": "lagon-et-ilets",
+      "photo": "ilet-turquoise",
+      "nom": {
+        "fr": "Journée lagon et îlets",
+        "en": "Lagoon and islets day"
+      },
+      "accroche": {
+        "fr": "Le Grand Cul-de-Sac Marin d'un bout à l'autre : les fonds blancs, la mangrove, l'îlet Caret.",
+        "en": "The Grand Cul-de-Sac Marin end to end: the white sandbanks, the mangrove, Îlet Caret."
+      },
+      "duree": {
+        "fr": "7 heures",
+        "en": "7 hours"
+      },
+      "dureeMinutes": 420,
+      "depart": "09:00",
+      "prix": 95,
+      "capacite": 12,
+      "rdv": {
+        "fr": "Marina de Sainte-Rose, ponton C, 8 h 45",
+        "en": "Sainte-Rose marina, pontoon C, 8:45 am"
+      },
+      "inclus": [
+        {
+          "fr": "Déjeuner créole à bord",
+          "en": "Creole lunch on board"
+        },
+        {
+          "fr": "Masques et tubas",
+          "en": "Masks and snorkels"
+        },
+        {
+          "fr": "Boissons fraîches et punch au retour",
+          "en": "Cold drinks and punch on the way back"
+        },
+        {
+          "fr": "Glacière et serviettes",
+          "en": "Cool box and towels"
+        }
+      ],
+      "texte": {
+        "fr": "On sort de la marina au moteur, on hisse dès la passe, et le lagon s'ouvre. Arrêt sur un fond blanc pour la première baignade, puis l'îlet Caret pour le déjeuner. L'après-midi se passe au mouillage, dans la mangrove, là où l'eau est calme et l'ombre franche.",
+        "en": "We motor out of the marina, hoist sail at the pass, and the lagoon opens up. A stop on a white sandbank for the first swim, then Îlet Caret for lunch. The afternoon is spent at anchor in the mangrove, where the water is calm and the shade sharp."
+      }
+    },
+    {
+      "id": "snorkeling",
+      "photo": "anse-claire",
+      "nom": {
+        "fr": "Snorkeling, demi-journée",
+        "en": "Snorkelling, half day"
+      },
+      "accroche": {
+        "fr": "Deux mouillages, deux fonds différents, et le temps de regarder.",
+        "en": "Two anchorages, two different seabeds, and time to look."
+      },
+      "duree": {
+        "fr": "3 h 30",
+        "en": "3½ hours"
+      },
+      "dureeMinutes": 210,
+      "depart": "13:30",
+      "prix": 55,
+      "capacite": 12,
+      "rdv": {
+        "fr": "Marina de Sainte-Rose, ponton C, 13 h 15",
+        "en": "Sainte-Rose marina, pontoon C, 1:15 pm"
+      },
+      "inclus": [
+        {
+          "fr": "Masques, tubas et palmes",
+          "en": "Masks, snorkels and fins"
+        },
+        {
+          "fr": "Accompagnement dans l'eau",
+          "en": "Guided in the water"
+        },
+        {
+          "fr": "Boissons fraîches et fruits",
+          "en": "Cold drinks and fruit"
+        }
+      ],
+      "texte": {
+        "fr": "Une demi-journée pour ceux qui viennent surtout pour l'eau. Le premier mouillage est peu profond, sableux, idéal pour se remettre au tuba. Le second longe un tombant où passent les bancs. On reste à l'eau autant que vous le voulez.",
+        "en": "A half day for those who come mainly for the water. The first anchorage is shallow and sandy, ideal to get used to a snorkel again. The second follows a drop-off where the shoals pass. You stay in the water as long as you like."
+      }
+    },
+    {
+      "id": "coucher-de-soleil",
+      "photo": "mouillage-couchant",
+      "nom": {
+        "fr": "Coucher de soleil",
+        "en": "Sunset"
+      },
+      "accroche": {
+        "fr": "Deux heures, un punch, et le soleil qui tombe derrière les Saintes.",
+        "en": "Two hours, a punch, and the sun dropping behind Les Saintes."
+      },
+      "duree": {
+        "fr": "2 heures",
+        "en": "2 hours"
+      },
+      "dureeMinutes": 120,
+      "depart": "17:00",
+      "prix": 45,
+      "capacite": 12,
+      "rdv": {
+        "fr": "Marina de Sainte-Rose, ponton C, 16 h 45",
+        "en": "Sainte-Rose marina, pontoon C, 4:45 pm"
+      },
+      "inclus": [
+        {
+          "fr": "Punch et jus de fruits",
+          "en": "Punch and fruit juice"
+        },
+        {
+          "fr": "Accras et bokit coupé",
+          "en": "Accras and sliced bokit"
+        },
+        {
+          "fr": "Plaid pour le retour",
+          "en": "A blanket for the way home"
+        }
+      ],
+      "texte": {
+        "fr": "On part quand la lumière commence à tourner. Le bateau se met au vent arrière le long de la côte, moteur coupé. Le soleil tombe vers dix-huit heures ; on reste encore un moment, le temps que le ciel passe à l'orange puis au mauve.",
+        "en": "We leave as the light begins to turn. The boat runs downwind along the coast, engine off. The sun goes down around six; we stay a while longer, while the sky turns orange, then mauve."
+      }
+    }
+  ],
+  "pied": {
+    "marque": {
+      "fr": "Sorties en mer au départ de Sainte-Rose, Guadeloupe.",
+      "en": "Boat trips from Sainte-Rose, Guadeloupe."
+    },
+    "editeur": {
+      "fr": "Site de démonstration réalisé par Studio Mathys, Mathys Bocage.",
+      "en": "Demonstration site built by Studio Mathys, Mathys Bocage."
+    },
+    "droits": {
+      "fr": "Démonstration — aucune réservation réelle.",
+      "en": "Demonstration — no real bookings."
+    }
+  },
+  "avis": {
+    "rail": {
+      "fr": "Avis",
+      "en": "Reviews"
+    },
+    "titre": {
+      "fr": "Ce qu'on nous écrit.",
+      "en": "What people write to us."
+    },
+    "mention": {
+      "fr": "Ces avis sont inventés : Balaou Croisières est une entreprise de démonstration.",
+      "en": "These reviews are invented: Balaou Croisières is a demonstration company."
+    },
+    "items": [
+      {
+        "nom": "Élodie R.",
+        "origine": {
+          "fr": "Nantes",
+          "en": "Nantes"
+        },
+        "sortie": {
+          "fr": "Journée lagon et îlets",
+          "en": "Lagoon and islets day"
+        },
+        "texte": {
+          "fr": "Parti à neuf heures, rentré à seize, et pas une minute d'ennui. Le déjeuner à l'îlet valait à lui seul la journée.",
+          "en": "Left at nine, back at four, and not a dull minute. Lunch on the islet was worth the day on its own."
+        }
+      },
+      {
+        "nom": "Marc & Sophie",
+        "origine": {
+          "fr": "Le Gosier",
+          "en": "Le Gosier"
+        },
+        "sortie": {
+          "fr": "Coucher de soleil",
+          "en": "Sunset"
+        },
+        "texte": {
+          "fr": "Deux heures, douze personnes, un punch. On est revenus le lendemain avec des amis.",
+          "en": "Two hours, twelve people, a punch. We came back the next day with friends."
+        }
+      },
+      {
+        "nom": "Priya K.",
+        "origine": {
+          "fr": "Londres",
+          "en": "London"
+        },
+        "sortie": {
+          "fr": "Snorkeling",
+          "en": "Snorkelling"
+        },
+        "texte": {
+          "fr": "Je n'avais jamais mis un tuba. On m'a accompagnée dans l'eau tout du long, à mon rythme.",
+          "en": "I had never used a snorkel. Someone stayed with me in the water the whole time, at my own pace."
+        }
+      }
+    ]
+  },
+  "questions": {
+    "rail": {
+      "fr": "Questions",
+      "en": "FAQ"
+    },
+    "titre": {
+      "fr": "Avant de monter à bord.",
+      "en": "Before you come aboard."
+    },
+    "items": [
+      {
+        "q": {
+          "fr": "Et s'il pleut ?",
+          "en": "What if it rains?"
+        },
+        "r": {
+          "fr": "Une averse passe en dix minutes sous ces latitudes et la sortie se poursuit. Nous décidons la veille au soir, sur le bulletin marine : si l'état de la mer nous fait rester à quai, vous choisissez une autre date ou nous vous remboursons l'acompte en entier.",
+          "en": "A shower passes in ten minutes here and the trip carries on. We decide the evening before, on the marine forecast: if the sea state keeps us at the dock, you pick another date or we refund the deposit in full."
+        }
+      },
+      {
+        "q": {
+          "fr": "Comment annuler ?",
+          "en": "How do I cancel?"
+        },
+        "r": {
+          "fr": "Jusqu'à quarante-huit heures avant le départ, l'acompte vous est rendu en entier. Passé ce délai, il reste acquis, et nous vous proposons de reporter sur une autre date dans l'année.",
+          "en": "Up to forty-eight hours before departure, the deposit is returned in full. After that it is retained, and we offer to move your booking to another date within the year."
+        }
+      },
+      {
+        "q": {
+          "fr": "Qu'est-ce qu'on apporte ?",
+          "en": "What should I bring?"
+        },
+        "r": {
+          "fr": "Un maillot, une serviette, une crème solaire respectueuse du récif et un chapeau. Le reste est à bord : masques, tubas, glacière, boissons et de quoi manger selon la sortie.",
+          "en": "A swimsuit, a towel, reef-safe sunscreen and a hat. The rest is on board: masks, snorkels, cool box, drinks and food depending on the trip."
+        }
+      },
+      {
+        "q": {
+          "fr": "Les enfants sont-ils acceptés ?",
+          "en": "Are children welcome?"
+        },
+        "r": {
+          "fr": "Dès six ans sur la journée et le coucher de soleil, dès huit ans pour le snorkeling. Les gilets à leur taille sont à bord.",
+          "en": "From six years old on the day trip and the sunset, from eight for snorkelling. Life jackets in their size are on board."
+        }
+      },
+      {
+        "q": {
+          "fr": "Comment se passe le paiement ?",
+          "en": "How does payment work?"
+        },
+        "r": {
+          "fr": "Un acompte de trente pour cent du total à la réservation, par carte, depuis le site. Le solde se règle à bord, en carte ou en espèces.",
+          "en": "A deposit of thirty per cent of the total on booking, by card, from the site. The balance is settled on board, by card or cash."
+        }
+      }
+    ]
+  },
+  "galerie": {
+    "rail": {
+      "fr": "Galerie",
+      "en": "Gallery"
+    },
+    "titre": {
+      "fr": "Le lagon, au fil des heures.",
+      "en": "The lagoon, hour by hour."
+    },
+    "mention": {
+      "fr": "Photographies prises en Guadeloupe par l'auteur du site.",
+      "en": "Photographs taken in Guadeloupe by the site's author."
+    }
+  },
+  "legal": {
+    "titre": {
+      "fr": "Mentions légales",
+      "en": "Legal notice"
+    },
+    "corps": {
+      "fr": "Balaou Croisières est une entreprise fictive. Ce site est une démonstration réalisée par Studio Mathys, nom commercial de Mathys Bocage, éditeur et directeur de la publication. SIREN 109 247 841. Courriel : contact@studiomathysbocage.fr. Hébergement : Netlify, Inc., 512 2nd Street, San Francisco, CA 94107, États-Unis. Aucune réservation n'est enregistrée et aucun paiement n'est encaissé depuis ce site.",
+      "en": "Balaou Croisières is a fictional company. This site is a demonstration built by Studio Mathys, trading name of Mathys Bocage, publisher and publication director. SIREN 109 247 841. Email: contact@studiomathysbocage.fr. Hosting: Netlify, Inc., 512 2nd Street, San Francisco, CA 94107, USA. No booking is recorded and no payment is taken from this site."
+    }
+  }
+}
