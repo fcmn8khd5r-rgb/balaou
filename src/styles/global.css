@@ -269,9 +269,15 @@ h1, h2, h3, h4 {
       animation-timeline: view();
       animation-range: entry 0% entry 42%;
     }
+    /* L'APPARITION NE TOUCHE PAS À L'OPACITÉ, et c'est une décision mesurée.
+       Un élément en cours d'entrée est à mi-course, et le texte à mi-opacité
+       ne se lit pas : relevé en défilant, un bloc à 0,41 tombait à 2,47 de
+       contraste pour un seuil de 4,5. Aucune rampe n'évite cet état — un
+       élément qui affleure le bord y stationne. Le déplacement seul fait une
+       apparition, et il ne coûte aucun contraste. */
     @keyframes monter {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: none; }
+      from { transform: translateY(12px); }
+      to   { transform: none; }
     }
     /* Le premier écran ne bouge jamais : rien ne clignote à l'arrivée, et le
        plus grand élément est peint tout de suite. */
