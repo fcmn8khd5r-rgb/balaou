@@ -24,8 +24,12 @@ interface Props {
   description: string;
   /** Adresse équivalente dans l'autre langue, pour hreflang. */
   jumelle?: string;
+  /** Une page qui ne doit pas être indexée — la 404, par exemple. */
+  noindex?: boolean;
+  /** L'image du premier écran, à précharger : c'est elle qui décide du LCP. */
+  precharge?: { srcset: string; sizes: string; type: string; media?: string }[];
 }
-const { langue, page, titre, description, jumelle } = Astro.props;
+const { langue, page, titre, description, jumelle, noindex = false, precharge = [] } = Astro.props;
 
 const site = new URL(Astro.site!);
 const canonique = new URL(Astro.url.pathname, site).href;
@@ -41,11 +45,15 @@ const partage = new URL('/partage.jpg', site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{titre}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonique} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <link rel="canonical" href={canonique} />}
 
-    <link rel="alternate" hreflang={langue} href={canonique} />
-    <link rel="alternate" hreflang={autre} href={adresseAutre} />
-    <link rel="alternate" hreflang="x-default" href={new URL(route(page, 'fr'), site).href} />
+    {!noindex && (
+      <>
+        <link rel="alternate" hreflang={langue} href={canonique} />
+        <link rel="alternate" hreflang={autre} href={adresseAutre} />
+        <link rel="alternate" hreflang="x-default" href={new URL(route(page, 'fr'), site).href} />
+      </>
+    )}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={contenu.site.nom} />
@@ -63,6 +71,13 @@ const partage = new URL('/partage.jpg', site).href;
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
+    {/* L'image du héros est le plus grand élément du premier écran : sans
+        préchargement, le navigateur ne la découvre qu'après avoir lu le
+        document, et le LCP en porte tout le retard. */}
+    {precharge.map((p) => (
+      <link rel="preload" as="image" imagesrcset={p.srcset} imagesizes={p.sizes} type={p.type} media={p.media} fetchpriority="high" />
+    ))}
+
     <link rel="preload" href="/polices/outfit-600.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/polices/source-sans-3-400.woff2" as="font" type="font/woff2" crossorigin />
   </head>
@@ -70,7 +85,7 @@ const partage = new URL('/partage.jpg', site).href;
   <body>
     <a class="evitement" href="#contenu">{t(contenu.ui.allerContenu, langue)}</a>
     <Bandeau langue={langue} />
-    <Entete langue={langue} page={page} />
+    <Entete langue={langue} page={page} jumelle={adresseAutre} />
     <main id="contenu"><slot /></main>
     <Pied langue={langue} />
     <BarreBasse langue={langue} />

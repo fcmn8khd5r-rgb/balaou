@@ -26,7 +26,7 @@ export function t<T>(valeur: Bilingue<T> | T, langue: Lang): T {
   return valeur as T;
 }
 
-export type Cle = 'accueil' | 'sorties' | 'galerie' | 'avis' | 'questions' | 'reserver' | 'mentions' | 'merci';
+export type Cle = 'accueil' | 'sorties' | 'galerie' | 'avis' | 'questions' | 'reserver' | 'devis' | 'mentions' | 'merci';
 
 const ROUTES: Record<Cle, Bilingue> = {
   accueil:   { fr: '/',                en: '/en/' },
@@ -35,6 +35,7 @@ const ROUTES: Record<Cle, Bilingue> = {
   avis:      { fr: '/avis/',           en: '/en/reviews/' },
   questions: { fr: '/questions/',      en: '/en/faq/' },
   reserver:  { fr: '/reserver/',       en: '/en/book/' },
+  devis:     { fr: '/devis/',          en: '/en/quote/' },
   mentions:  { fr: '/mentions-legales/', en: '/en/legal-notice/' },
   merci:     { fr: '/merci/',          en: '/en/thank-you/' },
 };

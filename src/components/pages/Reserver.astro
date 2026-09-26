@@ -1,0 +1,297 @@
+---
+import Base from '../../layouts/Base.astro';
+import contenu from '../../data/contenu.json';
+import { t, route, lienWhatsapp, type Lang } from '../../i18n';
+import { placesRestantes, devis, premierJourLibre, jour, TAUX_ACOMPTE } from '../../lib/reservation.mjs';
+
+interface Props { langue: Lang }
+const { langue } = Astro.props;
+const u = contenu.ui;
+
+/* La privatisation se chiffre sur devis : elle n'a pas sa place dans un
+   calendrier de places. Elle est renvoyée vers son formulaire, en bas. */
+const sorties = contenu.sorties.filter((s) => !s.surDevis);
+const privatisation = contenu.sorties.find((s) => s.surDevis);
+
+/* Le calendrier s'ouvre sur le premier mois qui offre de quoi choisir, jamais
+   sur le mois courant : un 28 du mois, celui-ci n'aurait presque rien à
+   montrer — et sur téléphone, où un seul mois tient à l'écran, le visiteur
+   n'aurait rien à cliquer. */
+const parDefaut = sorties[0];
+const premier = premierJourLibre(parDefaut.id, parDefaut.capacite);
+const mois = new Date(Date.UTC(premier.getUTCFullYear(), premier.getUTCMonth(), 1));
+
+/* Les initiales et les noms de jours suivent la langue : « LMMJVSD » en
+   français, « MTWTFSS » en anglais. Ils sont engendrés, non recopiés. */
+const lundi = Date.UTC(2024, 0, 1);   // un lundi
+const initiales = Array.from({ length: 7 }, (_, i) =>
+  new Intl.DateTimeFormat(langue === 'fr' ? 'fr-FR' : 'en-GB', { weekday: 'narrow', timeZone: 'UTC' })
+    .format(new Date(lundi + i * 86400000)).toUpperCase());
+const nomsJours = Array.from({ length: 7 }, (_, i) =>
+  new Intl.DateTimeFormat(langue === 'fr' ? 'fr-FR' : 'en-GB', { weekday: 'long', timeZone: 'UTC' })
+    .format(new Date(lundi + i * 86400000)));
+const lg = langue === 'fr' ? 'fr-FR' : 'en-GB';
+const nomMois = new Intl.DateTimeFormat(lg, { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(mois);
+
+const premierJourSemaine = (mois.getUTCDay() + 6) % 7;
+const nbJours = new Date(Date.UTC(mois.getUTCFullYear(), mois.getUTCMonth() + 1, 0)).getUTCDate();
+const cases = [
+  ...Array.from({ length: premierJourSemaine }, () => null),
+  ...Array.from({ length: nbJours }, (_, i) => {
+    const d = new Date(Date.UTC(mois.getUTCFullYear(), mois.getUTCMonth(), i + 1));
+    return { d, places: placesRestantes(parDefaut.id, parDefaut.capacite, d) };
+  }),
+];
+
+const d0 = devis(Number(parDefaut.prix), 2);
+const euro = (n: number) =>
+  new Intl.NumberFormat(lg, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+
+/* Ce dont le script a besoin, engendré ici plutôt que recopié : un nombre
+   écrit deux fois finit par diverger de sa source. */
+const donnees = {
+  langue,
+  taux: TAUX_ACOMPTE,
+  premierMois: `${mois.getUTCFullYear()}-${String(mois.getUTCMonth() + 1).padStart(2, '0')}`,
+  moisPlancher: `${new Date().getUTCFullYear()}-${String(new Date().getUTCMonth() + 1).padStart(2, '0')}`,
+  sorties: Object.fromEntries(sorties.map((s) => [s.id, {
+    nom: t(s.nom, langue), prix: Number(s.prix), capacite: s.capacite, rdv: t(s.rdv, langue),
+  }])),
+};
+---
+
+<Base langue={langue} page="reserver"
+      titre={t(contenu.pages.reserver.titre, langue)}
+      description={t(contenu.pages.reserver.description, langue)}>
+
+  <section class="section">
+    <div class="coque">
+      <div class="bande">
+        <p class="bande__rail">{t(u.reserver, langue)}</p>
+        <h1 class="bande__titre">{t(contenu.reserver.titre, langue)}</h1>
+        <p class="bande__lead">{t(contenu.reserver.intro, langue)}</p>
+      </div>
+
+      <div class="reserve" data-reserve>
+        <div class="reserve__colonne">
+          <fieldset class="champ">
+            <legend class="champ__titre">{t(contenu.reserver.laSortie, langue)}</legend>
+            <div class="choix">
+              {sorties.map((s, i) => (
+                <label class="choix__item">
+                  <input type="radio" name="sortie" value={s.id} checked={i === 0} data-sortie />
+                  <span class="choix__corps">
+                    <span class="choix__nom">{t(s.nom, langue)}</span>
+                    <span class="choix__meta">{t(s.duree, langue)} · {euro(Number(s.prix))} {t(u.parPersonne, langue)}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset class="champ">
+            <legend class="champ__titre">{t(contenu.reserver.laDate, langue)}</legend>
+            <div class="calendrier">
+              <div class="calendrier__tete">
+                <button type="button" class="calendrier__fleche" aria-label={t(contenu.reserver.moisPrecedent, langue)} data-mois="-1" disabled>‹</button>
+                <p class="calendrier__mois" data-nom-mois aria-live="polite">{nomMois}</p>
+                <button type="button" class="calendrier__fleche" aria-label={t(contenu.reserver.moisSuivant, langue)} data-mois="1">›</button>
+              </div>
+
+              <table class="calendrier__grille">
+                <caption class="lecteur-seul">{t(contenu.reserver.placesJour, langue)}</caption>
+                <thead>
+                  <tr>{initiales.map((i, n) => (
+                    <th scope="col"><abbr title={nomsJours[n]}>{i}</abbr></th>
+                  ))}</tr>
+                </thead>
+                <tbody data-grille>
+                  {Array.from({ length: Math.ceil(cases.length / 7) }, (_, l) => (
+                    <tr>
+                      {cases.slice(l * 7, l * 7 + 7).map((c) => (
+                        <td>
+                          {c === null ? <span class="jour jour--vide"></span> : (
+                            <button type="button"
+                                    class={`jour ${c.places === 0 ? 'jour--complet' : ''}`}
+                                    disabled={c.places === 0}
+                                    data-jour={jour(c.d)} data-places={c.places}
+                                    aria-label={`${c.d.getUTCDate()} ${nomMois} — ${c.places === 0 ? t(contenu.reserver.complet, langue) : `${c.places} ${t(contenu.reserver.places, langue)}`}`}>
+                              <span class="jour__chiffre">{c.d.getUTCDate()}</span>
+                              <span class="jour__places">{c.places === 0 ? '—' : c.places}</span>
+                            </button>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              <p class="calendrier__legende">{t(contenu.reserver.legende, langue)}</p>
+            </div>
+          </fieldset>
+
+          <fieldset class="champ">
+            <legend class="champ__titre">{t(contenu.reserver.lesPassagers, langue)}</legend>
+            <label class="nombre">
+              <span class="lecteur-seul">{t(contenu.reserver.nbPassagers, langue)}</span>
+              <input type="number" name="personnes" value="2" min="1" max={parDefaut.capacite}
+                     inputmode="numeric" data-personnes />
+            </label>
+            <p class="nombre__avis" data-avis hidden></p>
+          </fieldset>
+
+          {privatisation && (
+            <p class="renvoi">
+              {t(contenu.reserver.renvoi, langue)}
+              <a href={route('devis', langue)}>{t(u.demanderDevis, langue)}</a>
+            </p>
+          )}
+        </div>
+
+        <aside class="recap">
+          <h2 class="recap__titre">{t(contenu.reserver.recap, langue)}</h2>
+          <dl class="recap__lignes">
+            <div><dt data-recap-nom>{t(parDefaut.nom, langue)}</dt><dd data-recap-detail>{euro(Number(parDefaut.prix))} × 2</dd></div>
+            <div><dt>{t(contenu.reserver.date, langue)}</dt><dd data-recap-date>{t(contenu.reserver.aChoisir, langue)}</dd></div>
+            <div class="recap__total"><dt>{t(contenu.reserver.total, langue)}</dt><dd data-recap-total>{euro(d0.total)}</dd></div>
+            <div>
+              <dt>{t(contenu.reserver.acompte, langue)} <span>{t(contenu.reserver.assiette, langue)}</span></dt>
+              <dd data-recap-acompte>{euro(d0.acompte)}</dd>
+            </div>
+            <div><dt>{t(contenu.reserver.solde, langue)}</dt><dd data-recap-solde>{euro(d0.solde)}</dd></div>
+          </dl>
+
+          <button class="btn btn--plein recap__valider" type="button" data-valider>{t(contenu.reserver.regler, langue)}</button>
+          <p class="recap__reponse" data-reponse hidden></p>
+
+          <p class="recap__mention">{t(contenu.reserver.mention, langue)}</p>
+
+          <a class="btn btn--vert recap__wa" href={lienWhatsapp(langue)} rel="noopener">{t(u.ecrire, langue)}</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/json" id="donnees-reservation" set:html={JSON.stringify(donnees)} />
+</Base>
+
+<script>
+  import '../../scripts/reserver.js';
+</script>
+
+<style>
+  .reserve { display: grid; gap: var(--sp-bloc) clamp(2rem, 4vw, 3rem); align-items: start; }
+  @media (min-width: 60rem) { .reserve { grid-template-columns: 1fr 21rem; } }
+  .reserve__colonne { display: grid; gap: var(--sp-bloc); min-width: 0; }
+
+  .champ { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .champ__titre {
+    font-family: var(--titre); font-size: var(--t-rail); font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--encre-3);
+    padding: 0; margin-bottom: 0.85rem;
+  }
+
+  .choix { display: grid; gap: 0.5rem; }
+  .choix__item {
+    display: flex; align-items: center; gap: 0.85rem;
+    border: 1px solid var(--trait); border-radius: var(--rayon);
+    padding: 0.85rem 1rem; cursor: pointer; background: var(--fond);
+    transition: border-color 0.2s var(--courbe), background-color 0.2s var(--courbe);
+    min-height: 2.75rem;
+  }
+  .choix__item:hover { border-color: var(--trait-fort); }
+  .choix__item:has(input:checked) { border-color: var(--lagon); background: #f2fafb; }
+  .choix__item input { accent-color: var(--lagon); width: 1.15rem; height: 1.15rem; flex: none; }
+  .choix__corps { display: grid; min-width: 0; }
+  .choix__nom { font-family: var(--titre); font-size: var(--t-menu); font-weight: 600; overflow-wrap: anywhere; }
+  .choix__meta { color: var(--encre-3); font-size: var(--t-petit); }
+
+  .calendrier { border: 1px solid var(--trait); border-radius: var(--rayon); padding: 1rem; background: var(--fond); }
+  .calendrier__tete { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .calendrier__mois {
+    font-family: var(--titre); font-size: var(--t-sous); font-weight: 400;
+    text-transform: capitalize; text-align: center; min-width: 0; overflow-wrap: anywhere;
+  }
+  .calendrier__fleche {
+    width: 2.75rem; height: 2.75rem; flex: none;
+    border: 1px solid var(--trait-fort); border-radius: 999px; background: transparent;
+    font-size: 1.25rem; line-height: 1; cursor: pointer; color: var(--encre);
+  }
+  .calendrier__fleche:disabled { opacity: 0.35; cursor: default; }
+  .calendrier__fleche:not(:disabled):hover { border-color: var(--lagon); color: var(--lagon); }
+
+  .calendrier__grille { width: 100%; border-collapse: collapse; margin-top: 0.85rem; table-layout: fixed; }
+  .calendrier__grille th {
+    font-family: var(--titre); font-size: var(--t-rail); font-weight: 600;
+    color: var(--encre-3); padding-bottom: 0.4rem;
+  }
+  .calendrier__grille th abbr { text-decoration: none; }
+  .calendrier__grille td { padding: 2px; }
+  .calendrier__grille[aria-busy='true'] { opacity: 0.55; }
+
+  .jour {
+    display: grid; place-content: center; gap: 1px;
+    width: 100%; aspect-ratio: 1; min-height: 2.5rem;
+    border: 1px solid transparent; border-radius: 0.5rem;
+    background: var(--surface); color: var(--encre); cursor: pointer;
+    font-family: var(--titre); line-height: 1.05;
+    transition: background-color 0.18s var(--courbe), border-color 0.18s var(--courbe);
+  }
+  .jour:hover:not(:disabled) { background: #e4f4f6; border-color: var(--lagon); }
+  .jour[aria-pressed='true'] { background: var(--lagon); border-color: var(--lagon); color: #fff; }
+  .jour[aria-pressed='true'] .jour__places { color: #cfeef2; }
+  .jour__chiffre { font-size: var(--t-menu); font-weight: 600; }
+  .jour__places { font-size: 0.6875rem; color: var(--lagon); font-weight: 600; }
+  .jour--vide { background: transparent; cursor: default; }
+  /* Un jour complet reste VISIBLEMENT inactif, mais son chiffre se lit :
+     mesuré à 4,63 contre 1,76 sur les villas, où l'on devinait sans lire. */
+  .jour--complet { background: transparent; border-color: var(--trait); color: var(--encre-3); cursor: default; }
+  .jour--complet .jour__places { color: var(--encre-3); }
+
+  .calendrier__legende { color: var(--encre-3); font-size: var(--t-petit); margin-top: 0.85rem; }
+
+  .nombre input {
+    width: 6rem; min-height: 2.75rem; padding: 0.5rem 0.85rem;
+    border: 1px solid var(--trait-fort); border-radius: 0.5rem; background: var(--fond);
+    font-family: var(--titre); font-size: var(--t-menu); font-weight: 600;
+  }
+  .nombre__avis { color: var(--soleil); font-size: var(--t-petit); margin-top: 0.6rem; }
+
+  .renvoi {
+    border: 1px dashed var(--trait-fort); border-radius: var(--rayon);
+    padding: 1rem 1.15rem; color: var(--encre-2);
+  }
+  .renvoi a {
+    display: inline-block; margin-left: 0.35rem;
+    font-family: var(--titre); font-weight: 600; color: var(--lagon);
+  }
+
+  .recap {
+    border: 1px solid var(--trait); border-radius: var(--rayon);
+    padding: 1.25rem; background: var(--surface);
+    position: sticky; top: calc(var(--barre) + 1rem);
+  }
+  .recap__titre {
+    font-family: var(--titre); font-size: var(--t-rail); font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--encre-3);
+  }
+  .recap__lignes { display: grid; gap: 0.6rem; margin-top: 1rem; }
+  .recap__lignes div { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+  .recap__lignes dt { color: var(--encre-2); min-width: 0; overflow-wrap: anywhere; }
+  .recap__lignes dt span { display: block; color: var(--encre-3); font-size: var(--t-petit); }
+  .recap__lignes dd { font-family: var(--titre); font-weight: 600; white-space: nowrap; }
+  .recap__total { border-top: 1px solid var(--trait-fort); padding-top: 0.6rem; font-size: var(--t-sous); }
+  .recap__total dt { color: var(--encre); }
+
+  .recap__valider { width: 100%; margin-top: 1.25rem; }
+  .recap__valider:disabled { opacity: 0.5; cursor: default; }
+  .recap__reponse {
+    margin-top: 0.85rem; padding: 0.75rem 0.9rem;
+    border-radius: 0.5rem; background: #e8f5ee; color: #15503a;
+    font-size: var(--t-petit);
+  }
+  .recap__reponse--refus { background: #fbeee4; color: #7a4210; }
+  .recap__mention { color: var(--encre-3); font-size: var(--t-petit); margin-top: 0.75rem; }
+  .recap__wa { width: 100%; margin-top: 1rem; }
+</style>

@@ -1,0 +1,42 @@
+---
+/**
+ * Sans cette page, Netlify sert la sienne : un visiteur qui se trompe d'adresse
+ * quitte alors le site sans rien pour y revenir. Elle refuse l'indexation.
+ */
+import Base from '../layouts/Base.astro';
+import contenu from '../data/contenu.json';
+import { t, route, type Cle, type Lang } from '../i18n';
+
+const langue: Lang = 'fr';
+const e = contenu.erreur404;
+const liens: Cle[] = ['accueil', 'sorties', 'galerie', 'avis', 'questions', 'reserver', 'devis', 'mentions'];
+const nom: Record<Cle, any> = {
+  accueil: { fr: 'Accueil', en: 'Home' }, sorties: contenu.ui.sorties, galerie: contenu.ui.galerie,
+  avis: contenu.ui.avis, questions: contenu.ui.questions, reserver: contenu.ui.reserver,
+  devis: contenu.ui.demanderDevis, mentions: contenu.legal.titre, merci: contenu.merci.titre,
+};
+---
+<Base langue={langue} page="accueil" titre="Page introuvable — Balaou Croisières"
+      description="L'adresse demandée ne correspond à aucune page du site." noindex>
+  <section class="section">
+    <div class="coque">
+      <h1 class="quatre__titre">{t(e.titre, langue)}</h1>
+      <p class="quatre__corps mesure">{t(e.corps, langue)}</p>
+      <ul class="quatre__liens">
+        {liens.map((c) => <li><a href={route(c, langue)}>{t(nom[c], langue)}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</Base>
+<style>
+  .quatre__titre { font-size: var(--t-mega); }
+  .quatre__corps { margin-top: var(--sp-bloc); font-size: var(--t-lead); }
+  .quatre__liens {
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem;
+    list-style: none; padding: 0; margin-top: var(--sp-bloc);
+  }
+  .quatre__liens a {
+    display: inline-block; min-height: 2.75rem; padding-block: 0.6rem;
+    font-family: var(--titre); font-weight: 600; color: var(--lagon);
+  }
+</style>

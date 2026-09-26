@@ -1,6 +1,6 @@
 ---
-import Sortie from '../../components/pages/Sortie.astro';
-import contenu from '../../data/contenu.json';
+import Sortie from '../../../components/pages/Sortie.astro';
+import contenu from '../../../data/contenu.json';
 
 export function getStaticPaths() {
   return contenu.sorties.map((s) => ({ params: { id: s.id }, props: { sortie: s } }));
@@ -8,4 +8,4 @@ export function getStaticPaths() {
 
 const { sortie } = Astro.props;
 ---
-<Sortie langue="fr" sortie={sortie} />
+<Sortie langue="en" sortie={sortie} />

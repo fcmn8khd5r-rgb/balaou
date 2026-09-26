@@ -1,19 +1,4 @@
 ---
-import Base from '../layouts/Base.astro';
-import contenu from '../data/contenu.json';
-import { t, type Lang } from '../i18n';
-const langue: Lang = 'fr';
+import Mentions from '../components/pages/Mentions.astro';
 ---
-<Base langue={langue} page="mentions" titre="Mentions légales — Balaou Croisières"
-      description="Éditeur, hébergeur et nature du site : Balaou Croisières est une entreprise fictive, ce site est une démonstration.">
-  <section class="section">
-    <div class="coque">
-      <h1 class="doc__titre">{t(contenu.legal.titre, langue)}</h1>
-      <p class="doc__corps mesure">{t(contenu.legal.corps, langue)}</p>
-    </div>
-  </section>
-</Base>
-<style>
-  .doc__titre { font-size: var(--t-titre); }
-  .doc__corps { margin-top: var(--sp-bloc); font-size: var(--t-lead); text-wrap: pretty; }
-</style>
+<Mentions langue="fr" />

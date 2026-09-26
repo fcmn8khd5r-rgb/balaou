@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import contenu from '../../data/contenu.json';
+import { t, route, type Lang } from '../../i18n';
+interface Props { langue: Lang }
+const { langue } = Astro.props;
+const m = contenu.merci;
+---
+<Base langue={langue} page="merci" titre={t(contenu.pages.merci.titre, langue)}
+      description={t(contenu.pages.merci.description, langue)}>
+  <section class="section">
+    <div class="coque">
+      <h1 class="merci__titre">{t(m.titre, langue)}</h1>
+      <p class="merci__corps mesure">{t(m.corps, langue)}</p>
+      <p class="merci__mention mesure">{t(m.mention, langue)}</p>
+      <a class="btn btn--trait merci__retour" href={route('accueil', langue)}>{t(m.retour, langue)}</a>
+    </div>
+  </section>
+</Base>
+<style>
+  .merci__titre { font-size: var(--t-mega); }
+  .merci__corps { margin-top: var(--sp-bloc); font-size: var(--t-lead); text-wrap: pretty; }
+  .merci__mention { margin-top: 0.85rem; color: var(--encre-3); font-size: var(--t-petit); }
+  .merci__retour { margin-top: var(--sp-bloc); }
+</style>

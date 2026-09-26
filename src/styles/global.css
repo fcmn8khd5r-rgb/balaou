@@ -227,7 +227,12 @@ h1, h2, h3, h4 {
   justify-content: center;
   gap: 0.5rem;
   min-height: 2.75rem;
-  padding: 0.6rem 1.35rem;
+  /* Le rembourrage cède avant l'écran : à 200 %, 1,35 rem font 43 px de chaque
+     côté, et le libellé n'avait plus de place. */
+  padding: 0.6rem clamp(0.75rem, 0.4rem + 1.5vw, 1.35rem);
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: center;
   border: 1px solid transparent;
   border-radius: 999px;
   font-family: var(--titre);

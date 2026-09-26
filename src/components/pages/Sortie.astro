@@ -1,0 +1,124 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import contenu from '../../data/contenu.json';
+import { photo as photoDe } from '../../lib/photos';
+import { t, route, lienWhatsapp, type Lang } from '../../i18n';
+
+interface Props { langue: Lang; sortie: any }
+const { langue, sortie } = Astro.props;
+const u = contenu.ui;
+
+const photo = photoDe(sortie.photo);
+
+const prix = sortie.surDevis
+  ? null
+  : new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(Number(sortie.prix));
+---
+
+<Base langue={langue} page="sorties"
+      titre={`${t(sortie.nom, langue)} — Balaou Croisières`}
+      description={t(sortie.accroche, langue)}
+      jumelle={langue === 'fr' ? `/en/trips/${sortie.id}/` : `/sorties/${sortie.id}/`}>
+
+  <article>
+    <header class="section">
+      <div class="coque sortie__grille">
+        <div class="sortie__intro">
+          <p class="bande__rail">{t(u.sorties, langue)}</p>
+          <h1 class="sortie__titre">{t(sortie.nom, langue)}</h1>
+          <p class="sortie__accroche">{t(sortie.accroche, langue)}</p>
+
+          <dl class="faits">
+            <div><dt>{t(u.duree, langue)}</dt><dd>{t(sortie.duree, langue)}</dd></div>
+            <div><dt>{t(u.prix, langue)}</dt><dd>
+              {prix ? <>{prix} <span>{t(u.parPersonne, langue)}</span></> : t(u.surDevis, langue)}
+            </dd></div>
+            <div><dt>{t(u.places, langue)}</dt><dd>
+              {sortie.surDevis ? <>{t(u.jusqua, langue)} {sortie.capacite}</> : sortie.capacite}
+            </dd></div>
+            <div class="faits__large"><dt>{t(u.rdv, langue)}</dt><dd>{t(sortie.rdv, langue)}</dd></div>
+          </dl>
+
+          <div class="sortie__actions">
+            {sortie.surDevis ? (
+              <a class="btn btn--plein" href={route('devis', langue)}>{t(u.demanderDevis, langue)}</a>
+            ) : (
+              <a class="btn btn--plein" href={`${route('reserver', langue)}?sortie=${sortie.id}`}>
+                {t(u.reserverCette, langue)}
+              </a>
+            )}
+            <a class="btn btn--trait" href={lienWhatsapp(langue)} rel="noopener">{t(u.ecrire, langue)}</a>
+          </div>
+        </div>
+
+        <figure class="sortie__figure monte">
+          <Picture src={photo} alt={t(sortie.accroche, langue)}
+                   widths={[480, 720, 1080, 1440]}
+                   formats={['avif']} fallbackFormat="webp"
+                   sizes="(min-width: 60rem) 34rem, 92vw" quality={74}
+                   loading="eager" fetchpriority="high" />
+        </figure>
+      </div>
+    </header>
+
+    <section class="section section--surface">
+      <div class="coque sortie__corps">
+        <p class="sortie__texte monte">{t(sortie.texte, langue)}</p>
+
+        <div class="inclus monte">
+          <h2 class="inclus__titre">{t(u.inclus, langue)}</h2>
+          <ul class="inclus__liste">
+            {sortie.inclus.map((item: any) => <li>{t(item, langue)}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .sortie__grille { display: grid; gap: var(--sp-bloc) clamp(2rem, 5vw, 4rem); align-items: start; }
+  @media (min-width: 60rem) {
+    .sortie__grille { grid-template-columns: 1fr 34rem; align-items: center; }
+  }
+  .sortie__titre { font-size: var(--t-mega); margin-top: 0.75rem; }
+  .sortie__accroche {
+    font-size: var(--t-lead); color: var(--encre-2);
+    margin-top: 1rem; max-width: 34rem; text-wrap: pretty;
+  }
+  .sortie__figure { border-radius: var(--rayon); overflow: hidden; }
+  .sortie__figure :global(img) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+
+  .faits {
+    display: flex; flex-wrap: wrap; gap: 1rem clamp(1.5rem, 4vw, 2.5rem);
+    margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--trait);
+  }
+  .faits div { min-width: 0; }
+  .faits__large { flex: 1 1 100%; }
+  .faits dt {
+    font-family: var(--titre); font-size: var(--t-rail); font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--encre-3);
+  }
+  .faits dd { font-size: var(--t-menu); margin-top: 0.15rem; overflow-wrap: anywhere; }
+  .faits dd span { color: var(--encre-3); font-size: var(--t-petit); }
+
+  .sortie__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+
+  .sortie__corps { display: grid; gap: var(--sp-bloc) clamp(2rem, 6vw, 5rem); align-items: start; }
+  @media (min-width: 52rem) { .sortie__corps { grid-template-columns: 1fr 20rem; } }
+  .sortie__texte { font-size: var(--t-lead); max-width: var(--mesure); text-wrap: pretty; }
+
+  .inclus__titre {
+    font-family: var(--titre); font-size: var(--t-rail); font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--encre-3);
+  }
+  .inclus__liste { list-style: none; padding: 0; margin-top: 0.85rem; display: grid; gap: 0.5rem; }
+  .inclus__liste li { position: relative; padding-left: 1.5rem; min-width: 0; overflow-wrap: anywhere; }
+  .inclus__liste li::before {
+    content: ''; position: absolute; left: 0; top: 0.62em;
+    width: 0.75rem; height: 0.4rem;
+    border-left: 2px solid var(--lagon); border-bottom: 2px solid var(--lagon);
+    transform: rotate(-45deg);
+  }
+</style>

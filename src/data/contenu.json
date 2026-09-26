@@ -122,6 +122,22 @@
     "navPied": {
       "fr": "Navigation de pied de page",
       "en": "Footer navigation"
+    },
+    "surDevis": {
+      "fr": "Sur devis",
+      "en": "On request"
+    },
+    "demanderDevis": {
+      "fr": "Demander un devis",
+      "en": "Request a quote"
+    },
+    "jusqua": {
+      "fr": "jusqu'à",
+      "en": "up to"
+    },
+    "envoyer": {
+      "fr": "Envoyer la demande",
+      "en": "Send the request"
     }
   },
   "accueil": {
@@ -160,8 +176,8 @@
       "en": "Three ways to put to sea."
     },
     "sortiesIntro": {
-      "fr": "Chacune part de la même marina et se réserve en ligne, avec le nombre de places restantes affiché jour par jour.",
-      "en": "Each leaves from the same marina and books online, with remaining seats shown day by day."
+      "fr": "Deux sorties se réservent en ligne, avec le nombre de places restantes affiché jour par jour. La troisième est le bateau pour vous seuls.",
+      "en": "Two trips book online, with remaining seats shown day by day. The third is the boat to yourselves."
     }
   },
   "sorties": [
@@ -212,45 +228,48 @@
       }
     },
     {
-      "id": "snorkeling",
-      "photo": "anse-claire",
+      "id": "privatisation",
+      "photo": "plage-amandiers",
+      "surDevis": true,
       "nom": {
-        "fr": "Snorkeling, demi-journée",
-        "en": "Snorkelling, half day"
+        "fr": "Le bateau pour vous seuls",
+        "en": "The boat to yourselves"
       },
       "accroche": {
-        "fr": "Deux mouillages, deux fonds différents, et le temps de regarder.",
-        "en": "Two anchorages, two different seabeds, and time to look."
+        "fr": "Un anniversaire, un enterrement de vie de jeune fille, une bande d'amis : le bateau se privatise.",
+        "en": "A birthday, a hen party, a group of friends: the boat can be taken privately."
       },
       "duree": {
-        "fr": "3 h 30",
-        "en": "3½ hours"
+        "fr": "De 2 heures à la journée",
+        "en": "From 2 hours to a full day"
       },
-      "dureeMinutes": 210,
-      "depart": "13:30",
-      "prix": 55,
+      "depart": "à convenir",
       "capacite": 12,
       "rdv": {
-        "fr": "Marina de Sainte-Rose, ponton C, 13 h 15",
-        "en": "Sainte-Rose marina, pontoon C, 1:15 pm"
+        "fr": "Marina de Sainte-Rose, ponton C — horaire à convenir",
+        "en": "Sainte-Rose marina, pontoon C — time to be agreed"
       },
       "inclus": [
         {
-          "fr": "Masques, tubas et palmes",
-          "en": "Masks, snorkels and fins"
+          "fr": "Le bateau et son équipage pour votre groupe seul",
+          "en": "The boat and its crew for your group alone"
         },
         {
-          "fr": "Accompagnement dans l'eau",
-          "en": "Guided in the water"
+          "fr": "L'itinéraire construit avec vous",
+          "en": "The route planned with you"
         },
         {
-          "fr": "Boissons fraîches et fruits",
-          "en": "Cold drinks and fruit"
+          "fr": "Masques, tubas et glacière",
+          "en": "Masks, snorkels and cool box"
+        },
+        {
+          "fr": "Table et boissons selon la formule retenue",
+          "en": "Food and drinks depending on the option chosen"
         }
       ],
       "texte": {
-        "fr": "Une demi-journée pour ceux qui viennent surtout pour l'eau. Le premier mouillage est peu profond, sableux, idéal pour se remettre au tuba. Le second longe un tombant où passent les bancs. On reste à l'eau autant que vous le voulez.",
-        "en": "A half day for those who come mainly for the water. The first anchorage is shallow and sandy, ideal to get used to a snorkel again. The second follows a drop-off where the shoals pass. You stay in the water as long as you like."
+        "fr": "Douze personnes au maximum, un équipage, et une journée qui n'appartient qu'à vous. On construit l'itinéraire ensemble : les fonds blancs le matin, l'îlet pour le déjeuner, le retour au couchant — ou tout autre chose. Dites-nous la date, le nombre de personnes et ce que vous avez en tête ; le devis suit sous vingt-quatre heures.",
+        "en": "Twelve people at most, a crew, and a day that belongs to you alone. We plan the route together: the white sandbanks in the morning, the islet for lunch, home at sunset — or something else entirely. Tell us the date, the number of guests and what you have in mind; the quote follows within twenty-four hours."
       }
     },
     {
@@ -361,12 +380,12 @@
           "en": "London"
         },
         "sortie": {
-          "fr": "Snorkeling",
-          "en": "Snorkelling"
+          "fr": "Privatisation",
+          "en": "Private charter"
         },
         "texte": {
-          "fr": "Je n'avais jamais mis un tuba. On m'a accompagnée dans l'eau tout du long, à mon rythme.",
-          "en": "I had never used a snorkel. Someone stayed with me in the water the whole time, at my own pace."
+          "fr": "Douze pour l'anniversaire de ma sœur. L'itinéraire a été construit avec nous, et le gâteau est arrivé au mouillage.",
+          "en": "Twelve of us for my sister's birthday. The route was planned with us, and the cake arrived at anchor."
         }
       }
     ]
@@ -413,6 +432,16 @@
       },
       {
         "q": {
+          "fr": "Peut-on privatiser le bateau ?",
+          "en": "Can we take the boat privately?"
+        },
+        "r": {
+          "fr": "Oui, de deux heures à la journée entière, jusqu'à douze personnes. L'itinéraire se construit avec vous et le devis suit sous vingt-quatre heures. C'est la formule retenue pour les anniversaires, les enterrements de vie de jeune fille et les sorties d'équipe.",
+          "en": "Yes, from two hours to a full day, up to twelve people. The route is planned with you and the quote follows within twenty-four hours. It is the option chosen for birthdays, hen parties and team outings."
+        }
+      },
+      {
+        "q": {
           "fr": "Les enfants sont-ils acceptés ?",
           "en": "Are children welcome?"
         },
@@ -445,6 +474,26 @@
     "mention": {
       "fr": "Photographies prises en Guadeloupe par l'auteur du site.",
       "en": "Photographs taken in Guadeloupe by the site's author."
+    },
+    "agrandir": {
+      "fr": "Agrandir",
+      "en": "Enlarge"
+    },
+    "fermer": {
+      "fr": "Fermer la visionneuse",
+      "en": "Close the viewer"
+    },
+    "precedente": {
+      "fr": "Vue précédente",
+      "en": "Previous view"
+    },
+    "suivante": {
+      "fr": "Vue suivante",
+      "en": "Next view"
+    },
+    "visionneuse": {
+      "fr": "Visionneuse",
+      "en": "Viewer"
     }
   },
   "legal": {
@@ -455,6 +504,294 @@
     "corps": {
       "fr": "Balaou Croisières est une entreprise fictive. Ce site est une démonstration réalisée par Studio Mathys, nom commercial de Mathys Bocage, éditeur et directeur de la publication. SIREN 109 247 841. Courriel : contact@studiomathysbocage.fr. Hébergement : Netlify, Inc., 512 2nd Street, San Francisco, CA 94107, États-Unis. Aucune réservation n'est enregistrée et aucun paiement n'est encaissé depuis ce site.",
       "en": "Balaou Croisières is a fictional company. This site is a demonstration built by Studio Mathys, trading name of Mathys Bocage, publisher and publication director. SIREN 109 247 841. Email: contact@studiomathysbocage.fr. Hosting: Netlify, Inc., 512 2nd Street, San Francisco, CA 94107, USA. No booking is recorded and no payment is taken from this site."
+    }
+  },
+  "devis": {
+    "rail": {
+      "fr": "Privatisation",
+      "en": "Private charter"
+    },
+    "titre": {
+      "fr": "Dites-nous ce que vous avez en tête.",
+      "en": "Tell us what you have in mind."
+    },
+    "intro": {
+      "fr": "Le devis suit sous vingt-quatre heures, du lundi au samedi. Pour une réponse immédiate, WhatsApp va plus vite.",
+      "en": "The quote follows within twenty-four hours, Monday to Saturday. For an immediate reply, WhatsApp is faster."
+    },
+    "champs": {
+      "nom": {
+        "fr": "Votre nom",
+        "en": "Your name"
+      },
+      "courriel": {
+        "fr": "Votre courriel",
+        "en": "Your email"
+      },
+      "telephone": {
+        "fr": "Votre téléphone",
+        "en": "Your phone"
+      },
+      "date": {
+        "fr": "La date envisagée",
+        "en": "Date you have in mind"
+      },
+      "personnes": {
+        "fr": "Nombre de personnes",
+        "en": "Number of guests"
+      },
+      "occasion": {
+        "fr": "L'occasion",
+        "en": "The occasion"
+      },
+      "message": {
+        "fr": "Ce que vous imaginez",
+        "en": "What you picture"
+      }
+    },
+    "occasions": [
+      {
+        "fr": "Anniversaire",
+        "en": "Birthday"
+      },
+      {
+        "fr": "Enterrement de vie de jeune fille ou de garçon",
+        "en": "Hen or stag party"
+      },
+      {
+        "fr": "Sortie entre amis",
+        "en": "A day with friends"
+      },
+      {
+        "fr": "Séminaire ou équipe",
+        "en": "Company or team outing"
+      },
+      {
+        "fr": "Autre",
+        "en": "Something else"
+      }
+    ],
+    "facultatif": {
+      "fr": "facultatif",
+      "en": "optional"
+    },
+    "consentement": {
+      "fr": "J'accepte que ces informations servent à me répondre.",
+      "en": "I agree these details may be used to reply to me."
+    },
+    "mention": {
+      "fr": "Démonstration : le formulaire vérifie vos réponses et affiche un accusé de réception. Rien n'est envoyé, rien n'est conservé.",
+      "en": "Demonstration: the form checks your answers and shows an acknowledgement. Nothing is sent, nothing is stored."
+    }
+  },
+  "merci": {
+    "titre": {
+      "fr": "Bien reçu.",
+      "en": "Well received."
+    },
+    "corps": {
+      "fr": "Votre demande est arrivée. Sur le site d'un vrai prestataire, un devis suivrait sous vingt-quatre heures.",
+      "en": "Your request has arrived. On a real operator's site, a quote would follow within twenty-four hours."
+    },
+    "mention": {
+      "fr": "Ce site étant une démonstration, rien n'a été envoyé et rien n'a été conservé.",
+      "en": "As this site is a demonstration, nothing was sent and nothing was stored."
+    },
+    "retour": {
+      "fr": "Revenir à l'accueil",
+      "en": "Back to the home page"
+    }
+  },
+  "pages": {
+    "accueil": {
+      "titre": {
+        "fr": "Balaou Croisières — sorties en mer",
+        "en": "Balaou Croisières — boat trips"
+      },
+      "description": {
+        "fr": "Sorties en bateau au départ de Sainte-Rose : journée lagon et îlets, privatisation, coucher de soleil. Douze passagers, réservation directe.",
+        "en": "Boat trips from Sainte-Rose, Guadeloupe: lagoon and islets, private charter, sunset. Twelve guests, book direct."
+      }
+    },
+    "sorties": {
+      "titre": {
+        "fr": "Les sorties — Balaou Croisières",
+        "en": "The trips — Balaou Croisières"
+      },
+      "description": {
+        "fr": "Trois sorties au départ de la marina de Sainte-Rose : la journée lagon et îlets, le bateau privatisé, le coucher de soleil.",
+        "en": "Three trips from Sainte-Rose marina: the lagoon and islets day, the private charter, the sunset."
+      }
+    },
+    "galerie": {
+      "titre": {
+        "fr": "Galerie — Balaou Croisières",
+        "en": "Gallery — Balaou Croisières"
+      },
+      "description": {
+        "fr": "Le lagon et la côte de Sainte-Rose, du plein jour au couchant. Photographies prises en Guadeloupe.",
+        "en": "The lagoon and the Sainte-Rose coast, from midday to sunset. Photographs taken in Guadeloupe."
+      }
+    },
+    "avis": {
+      "titre": {
+        "fr": "Avis — Balaou Croisières",
+        "en": "Reviews — Balaou Croisières"
+      },
+      "description": {
+        "fr": "Ce que les passagers écrivent après une sortie. Avis inventés : Balaou Croisières est une démonstration.",
+        "en": "What guests write after a trip. Invented reviews: Balaou Croisières is a demonstration."
+      }
+    },
+    "questions": {
+      "titre": {
+        "fr": "Questions — Balaou Croisières",
+        "en": "FAQ — Balaou Croisières"
+      },
+      "description": {
+        "fr": "Météo, annulation, ce qu'il faut apporter, enfants à bord, privatisation, paiement : les réponses avant de réserver.",
+        "en": "Weather, cancellation, what to bring, children aboard, private charter, payment: answers before you book."
+      }
+    },
+    "reserver": {
+      "titre": {
+        "fr": "Réserver — Balaou Croisières",
+        "en": "Book — Balaou Croisières"
+      },
+      "description": {
+        "fr": "Choisissez la sortie, la date et le nombre de passagers. Les places restantes s'affichent jour par jour.",
+        "en": "Choose the trip, the date and the number of guests. Remaining seats are shown day by day."
+      }
+    },
+    "devis": {
+      "titre": {
+        "fr": "Privatiser le bateau — Balaou Croisières",
+        "en": "Private charter — Balaou Croisières"
+      },
+      "description": {
+        "fr": "Anniversaire, enterrement de vie de jeune fille, sortie d'équipe : le bateau pour vous seuls, jusqu'à douze personnes.",
+        "en": "Birthday, hen party, team outing: the boat to yourselves, up to twelve people."
+      }
+    },
+    "merci": {
+      "titre": {
+        "fr": "Bien reçu — Balaou Croisières",
+        "en": "Well received — Balaou Croisières"
+      },
+      "description": {
+        "fr": "Votre demande de devis est arrivée. Ce site est une démonstration : rien n'a été envoyé.",
+        "en": "Your quote request has arrived. This site is a demonstration: nothing was sent."
+      }
+    },
+    "mentions": {
+      "titre": {
+        "fr": "Mentions légales — Balaou Croisières",
+        "en": "Legal notice — Balaou Croisières"
+      },
+      "description": {
+        "fr": "Éditeur, hébergeur et nature du site : Balaou Croisières est une entreprise fictive, ce site est une démonstration.",
+        "en": "Publisher, host and nature of the site: Balaou Croisières is a fictional company, this site is a demonstration."
+      }
+    }
+  },
+  "reserver": {
+    "titre": {
+      "fr": "Choisissez votre date.",
+      "en": "Choose your date."
+    },
+    "intro": {
+      "fr": "Les places restantes s'affichent jour par jour. L'acompte se règle en ligne, le solde à bord.",
+      "en": "Remaining seats are shown day by day. The deposit is paid online, the balance on board."
+    },
+    "laSortie": {
+      "fr": "La sortie",
+      "en": "The trip"
+    },
+    "laDate": {
+      "fr": "La date",
+      "en": "The date"
+    },
+    "lesPassagers": {
+      "fr": "Les passagers",
+      "en": "The guests"
+    },
+    "legende": {
+      "fr": "Le chiffre du bas donne les places encore libres. Le bateau reste à quai le lundi.",
+      "en": "The lower figure gives the seats still free. The boat stays at the dock on Mondays."
+    },
+    "recap": {
+      "fr": "Récapitulatif",
+      "en": "Summary"
+    },
+    "date": {
+      "fr": "Date",
+      "en": "Date"
+    },
+    "aChoisir": {
+      "fr": "à choisir",
+      "en": "to be chosen"
+    },
+    "total": {
+      "fr": "Total",
+      "en": "Total"
+    },
+    "acompte": {
+      "fr": "Acompte à régler aujourd'hui",
+      "en": "Deposit due today"
+    },
+    "assiette": {
+      "fr": "30 % du total",
+      "en": "30% of the total"
+    },
+    "solde": {
+      "fr": "Solde à bord",
+      "en": "Balance on board"
+    },
+    "regler": {
+      "fr": "Régler l'acompte",
+      "en": "Pay the deposit"
+    },
+    "mention": {
+      "fr": "Démonstration : le parcours se déroule en entier, aucune carte n'est demandée et aucune somme n'est encaissée.",
+      "en": "Demonstration: the journey runs in full, no card is requested and no money is taken."
+    },
+    "renvoi": {
+      "fr": "Vous êtes plus nombreux, ou vous voulez le bateau pour vous seuls ?",
+      "en": "More of you, or you want the boat to yourselves?"
+    },
+    "moisPrecedent": {
+      "fr": "Mois précédent",
+      "en": "Previous month"
+    },
+    "moisSuivant": {
+      "fr": "Mois suivant",
+      "en": "Next month"
+    },
+    "placesJour": {
+      "fr": "Places restantes, jour par jour",
+      "en": "Remaining seats, day by day"
+    },
+    "nbPassagers": {
+      "fr": "Nombre de passagers",
+      "en": "Number of guests"
+    },
+    "complet": {
+      "fr": "complet",
+      "en": "full"
+    },
+    "places": {
+      "fr": "places",
+      "en": "seats"
+    }
+  },
+  "erreur404": {
+    "titre": {
+      "fr": "Cette page a filé.",
+      "en": "This page has slipped away."
+    },
+    "corps": {
+      "fr": "L'adresse ne mène à rien. Voici par où reprendre.",
+      "en": "The address leads nowhere. Here is where to pick up again."
     }
   }
 }

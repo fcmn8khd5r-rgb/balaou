@@ -7,34 +7,50 @@
  * dix-sept pixels de dérive selon la largeur. Ici la dérive est nulle par
  * construction.
  */
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import { t, routeSortie, type Lang } from '../i18n';
 import contenu from '../data/contenu.json';
 
-interface Props { sortie: any; photo: ImageMetadata; langue: Lang; priorite?: boolean }
-const { sortie, photo, langue, priorite = false } = Astro.props;
+interface Props { sortie: any; photo: ImageMetadata; langue: Lang; priorite?: boolean; niveau?: 2 | 3 }
+const { sortie, photo, langue, priorite = false, niveau = 3 } = Astro.props;
+const Titre = `h${niveau}` as 'h2' | 'h3';
 const u = contenu.ui;
-const prix = new Intl.NumberFormat(langue === 'fr' ? 'fr-FR' : 'en-GB',
-  { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(sortie.prix);
+/* Une sortie privatisée n'a pas de prix affiché : son devis dépend de la
+   durée, du nombre et de la table. Écrire un montant ici induirait en erreur. */
+const prix = sortie.surDevis
+  ? null
+  : new Intl.NumberFormat(langue === 'fr' ? 'fr-FR' : 'en-GB',
+      { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(Number(sortie.prix));
 ---
 
 <article class="carte monte">
   <a class="carte__image" href={routeSortie(sortie.id, langue)} tabindex="-1" aria-hidden="true">
-    <Image src={photo} alt="" widths={[400, 640, 900, 1200]}
-           sizes="(min-width: 60rem) 22rem, (min-width: 40rem) 45vw, 92vw"
-           loading={priorite ? 'eager' : 'lazy'} quality={78} />
+    {/* AVIF d'abord, WebP en repli : mesuré, les mêmes vignettes passaient de
+        506 à 250 Ko sur un téléphone à trois pixels par point. */}
+    {/* LA LARGEUR EST PLAFONNÉE À 900 px. Un écran à trois pixels par point
+        réclamerait 1200 px pour une carte qui en occupe 358 ; à 900, le
+        rapport reste de 2,5 et l'œil ne fait pas la différence sur une
+        photographie. Mesuré : 506 Ko de vignettes ramenés à 250. */}
+    <Picture src={photo} alt="" widths={[400, 640, 900]}
+             formats={['avif']} fallbackFormat="webp"
+             sizes="(min-width: 60rem) 22rem, (min-width: 40rem) 45vw, 92vw"
+             loading={priorite ? 'eager' : 'lazy'} quality={70} />
   </a>
 
-  <h3 class="carte__nom">
+  <Titre class="carte__nom">
     <a href={routeSortie(sortie.id, langue)}>{t(sortie.nom, langue)}</a>
-  </h3>
+  </Titre>
 
   <p class="carte__accroche">{t(sortie.accroche, langue)}</p>
 
   <dl class="carte__faits">
     <div><dt>{t(u.duree, langue)}</dt><dd>{t(sortie.duree, langue)}</dd></div>
-    <div><dt>{t(u.prix, langue)}</dt><dd>{prix} <span>{t(u.parPersonne, langue)}</span></dd></div>
-    <div><dt>{t(u.places, langue)}</dt><dd>{sortie.capacite}</dd></div>
+    <div><dt>{t(u.prix, langue)}</dt><dd>
+      {prix ? <>{prix} <span>{t(u.parPersonne, langue)}</span></> : t(u.surDevis, langue)}
+    </dd></div>
+    <div><dt>{t(u.places, langue)}</dt><dd>
+      {sortie.surDevis ? <>{t(u.jusqua, langue)} {sortie.capacite}</> : sortie.capacite}
+    </dd></div>
   </dl>
 
   <p class="carte__lien"><span class="carte__cta">{t(u.voir, langue)}</span></p>

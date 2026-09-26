@@ -1,0 +1,121 @@
+---
+import { Picture, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import contenu from '../../data/contenu.json';
+import photosMeta from '../../data/photos.json';
+import { photo as photoDe } from '../../lib/photos';
+import { t, type Lang } from '../../i18n';
+
+interface Props { langue: Lang }
+const { langue } = Astro.props;
+const g = contenu.galerie;
+
+/* Chaque vue porte son grand format en attribut : la visionneuse n'a donc
+   aucune adresse à construire — c'est ainsi qu'elle s'était retrouvée vide
+   sous /en/, où les chemins relatifs désignent autre chose. */
+const vues = await Promise.all(
+  photosMeta.map(async (p: any) => {
+    const image = photoDe(p.vers);
+    /* WebP et non AVIF pour le grand format : la visionneuse pose un <img>
+       nu, sans repli possible, et WebP est compris depuis Safari 14 quand
+       AVIF attend Safari 16. */
+    const grande = await getImage({ src: image, width: 1600, format: 'webp', quality: 80 });
+    return { ...p, image, grande: grande.src, l: grande.attributes.width, h: grande.attributes.height };
+  }),
+);
+---
+
+<Base langue={langue} page="galerie"
+      titre={t(contenu.pages.galerie.titre, langue)}
+      description={t(contenu.pages.galerie.description, langue)}>
+  <section class="section">
+    <div class="coque">
+      <div class="bande">
+        <p class="bande__rail">{t(g.rail, langue)}</p>
+        <h1 class="bande__titre">{t(g.titre, langue)}</h1>
+        <p class="bande__lead">{t(g.mention, langue)}</p>
+      </div>
+
+      <ul class="mosaique" data-galerie>
+        {vues.map((v, i) => (
+          <li class="vue monte">
+            <button type="button" class="vue__bouton"
+                    data-vue={i} data-grande={v.grande}
+                    data-legende={t(v.legende, langue)}
+                    aria-label={`${t(g.agrandir, langue)} — ${t(v.legende, langue)}`}>
+              <Picture src={v.image} alt={t(v.legende, langue)} widths={[400, 640, 900]}
+                       formats={['avif']} fallbackFormat="webp"
+                       sizes="(min-width: 60rem) 30vw, (min-width: 40rem) 46vw, 92vw"
+                       quality={68} loading={i === 0 ? 'eager' : 'lazy'}
+                       fetchpriority={i === 0 ? 'high' : 'auto'} />
+            </button>
+            <p class="vue__legende">{t(v.legende, langue)}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <dialog class="visio" data-visio aria-label={t(g.visionneuse, langue)}>
+    <button type="button" class="visio__fermer" data-fermer aria-label={t(g.fermer, langue)}>×</button>
+    <button type="button" class="visio__fleche visio__fleche--gauche" data-pas="-1" aria-label={t(g.precedente, langue)}>‹</button>
+    <figure class="visio__cadre">
+      <img data-image alt="" decoding="async" />
+      <figcaption data-legende></figcaption>
+    </figure>
+    <button type="button" class="visio__fleche visio__fleche--droite" data-pas="1" aria-label={t(g.suivante, langue)}>›</button>
+  </dialog>
+</Base>
+
+<script>
+  import '../../scripts/galerie.js';
+</script>
+
+<style>
+  .mosaique {
+    display: grid; gap: clamp(0.75rem, 2vw, 1.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
+    list-style: none; padding: 0;
+  }
+  .vue { min-width: 0; }
+  .vue__bouton {
+    display: block; width: 100%; padding: 0; border: 0; background: none;
+    cursor: zoom-in; border-radius: var(--rayon); overflow: hidden;
+  }
+  .vue__bouton :global(img) {
+    width: 100%; aspect-ratio: 4 / 3; object-fit: cover;
+    transition: transform 0.4s var(--courbe);
+  }
+  .vue__bouton:hover :global(img) { transform: scale(1.03); }
+  @media (prefers-reduced-motion: reduce) { .vue__bouton:hover :global(img) { transform: none; } }
+  .vue__legende { color: var(--encre-3); font-size: var(--t-petit); margin-top: 0.5rem; }
+
+  /* Un <dialog> natif : son ouverture et sa fermeture ne dépendent d'aucune
+     règle d'auteur, ce qui écarte le piège de « hidden » battu par un
+     « display » — trois sites l'ont porté, dont un où plus rien n'était
+     cliquable. */
+  .visio { border: 0; padding: 0; max-width: 100vw; max-height: 100dvh; width: 100%; height: 100%;
+           background: rgb(10 22 30 / 0.96); color: #fff; }
+  .visio::backdrop { background: rgb(10 22 30 / 0.9); }
+  .visio__cadre {
+    display: grid; place-content: center; gap: 0.85rem;
+    height: 100%; padding: clamp(3.5rem, 8vw, 5rem) clamp(1rem, 6vw, 5rem);
+  }
+  .visio__cadre img {
+    max-width: 100%; max-height: calc(100dvh - 10rem);
+    width: auto; height: auto; object-fit: contain; border-radius: 0.5rem;
+  }
+  .visio__cadre figcaption { text-align: center; font-size: var(--t-petit); color: #d9e6e9; }
+
+  .visio__fermer, .visio__fleche {
+    position: absolute; z-index: 2;
+    width: 2.75rem; height: 2.75rem; display: grid; place-content: center;
+    border: 1px solid rgb(255 255 255 / 0.4); border-radius: 999px;
+    background: rgb(10 22 30 / 0.5); color: #fff; font-size: 1.5rem; line-height: 1; cursor: pointer;
+  }
+  .visio__fermer:hover, .visio__fleche:hover { background: rgb(255 255 255 / 0.18); }
+  .visio__fermer { top: clamp(0.75rem, 2vw, 1.25rem); right: clamp(0.75rem, 2vw, 1.25rem); }
+  .visio__fleche { top: 50%; transform: translateY(-50%); }
+  .visio__fleche--gauche { left: clamp(0.5rem, 2vw, 1.25rem); }
+  .visio__fleche--droite { right: clamp(0.5rem, 2vw, 1.25rem); }
+</style>

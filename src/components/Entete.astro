@@ -14,8 +14,8 @@
 import contenu from '../data/contenu.json';
 import { t, route, lienWhatsapp, type Lang } from '../i18n';
 
-interface Props { langue: Lang; page: string }
-const { langue, page } = Astro.props;
+interface Props { langue: Lang; page: string; jumelle: string }
+const { langue, page, jumelle } = Astro.props;
 const u = contenu.ui;
 
 const liens = [
@@ -41,7 +41,11 @@ const autre: Lang = langue === 'fr' ? 'en' : 'fr';
     </nav>
 
     <div class="tete__actions">
-      <a class="tete__langue" href={route(page === 'accueil' ? 'accueil' : 'accueil', autre)} hreflang={autre} lang={autre}>
+      {/* Le sélecteur mène à la page ÉQUIVALENTE, jamais à l'accueil : un
+          anglophone tombé sur la page d'une sortie veut cette sortie, pas le
+          début du site. L'adresse vient du gabarit, qui la calcule déjà pour
+          les balises « hreflang ». */}
+      <a class="tete__langue" href={jumelle} hreflang={autre} lang={autre}>
         {autre === 'en' ? 'EN' : 'FR'}
       </a>
       <a class="btn btn--plein tete__reserver" href={route('reserver', langue)}>{t(u.reserver, langue)}</a>
@@ -52,6 +56,7 @@ const autre: Lang = langue === 'fr' ? 'en' : 'fr';
         </summary>
         <nav class="tiroir__panneau" aria-label={t(u.navPrincipale, langue)}>
           {liens.map((l) => <a href={route(l.cle, langue)}>{l.texte}</a>)}
+          <a href={jumelle} hreflang={autre} lang={autre}>{autre === 'en' ? 'English' : 'Français'}</a>
           <a href={lienWhatsapp(langue)} rel="noopener">{t(u.ecrire, langue)}</a>
         </nav>
       </details>
@@ -68,7 +73,10 @@ const autre: Lang = langue === 'fr' ? 'en' : 'fr';
        de défilement, très coûteuse sur iOS. */
   }
   .tete__coque {
-    display: flex; align-items: center; gap: clamp(0.75rem, 2vw, 2rem);
+    display: flex; align-items: center;
+    /* Le pas est plafonné en vw : à 200 % de taille de texte, une borne basse
+       en rem doublerait et la barre sortirait de l'écran. */
+    gap: min(clamp(0.75rem, 2vw, 2rem), 4vw);
     min-height: var(--barre);
   }
 
@@ -77,11 +85,19 @@ const autre: Lang = langue === 'fr' ? 'en' : 'fr';
     font-family: var(--titre); text-decoration: none; line-height: 1;
     margin-right: auto;
   }
-  .marque__nom { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.02em; }
+  /* LES PLAFONDS EN VW TIENNENT LA BARRE À TOUTE TAILLE DE TEXTE.
+     Une requête média en rem ne répond PAS au réglage du visiteur : dans une
+     « media query », le rem vaut toujours 16 px, quelle que soit la taille
+     choisie. La règle qui devait masquer « CROISIÈRES » sous 22 rem ne se
+     déclenchait donc jamais, et la marque occupait 314 px sur un écran de 390.
+     On plafonne donc les corps eux-mêmes. */
+  .marque__nom { font-size: min(1.35rem, 7vw); font-weight: 600; letter-spacing: -0.02em; }
   .marque__suite {
-    font-size: var(--t-rail); font-weight: 400; letter-spacing: 0.16em;
-    text-transform: uppercase; color: var(--lagon);
+    font-size: min(var(--t-rail), 3.2vw); font-weight: 400; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--lagon); white-space: nowrap;
   }
+  /* Sous 24 rem de LARGEUR RÉELLE, le mot cède la place — et « container »
+     n'étant pas nécessaire ici, on s'en tient à une largeur en vw. */
   @media (max-width: 22rem) { .marque__suite { display: none; } }
 
   .tete__nav { display: none; gap: clamp(1rem, 2.2vw, 2rem); }
@@ -100,8 +116,8 @@ const autre: Lang = langue === 'fr' ? 'en' : 'fr';
   .tete__actions { display: flex; align-items: center; gap: 0.5rem; }
   .tete__langue {
     display: inline-flex; align-items: center; justify-content: center;
-    min-width: 2.5rem; min-height: 2.5rem;
-    font-family: var(--titre); font-size: var(--t-petit); font-weight: 600;
+    min-width: min(2.5rem, 12vw); min-height: min(2.5rem, 12vw);
+    font-family: var(--titre); font-size: min(var(--t-petit), 3.6vw); font-weight: 600;
     letter-spacing: 0.06em; text-decoration: none; color: var(--encre-2);
     border: 1px solid var(--trait-fort); border-radius: 999px;
   }
@@ -114,7 +130,7 @@ const autre: Lang = langue === 'fr' ? 'en' : 'fr';
   .tiroir { position: relative; }
   .tiroir__bouton {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 2.75rem; height: 2.75rem; cursor: pointer; list-style: none;
+    width: min(2.75rem, 13vw); height: min(2.75rem, 13vw); cursor: pointer; list-style: none;
     border: 1px solid var(--trait-fort); border-radius: 999px;
   }
   .tiroir__bouton::-webkit-details-marker { display: none; }
@@ -122,9 +138,21 @@ const autre: Lang = langue === 'fr' ? 'en' : 'fr';
   .tiroir__barres i { display: block; width: 18px; height: 1.5px; background: var(--encre); }
   .tiroir[open] .tiroir__barres i:nth-child(2) { opacity: 0; }
 
+  /* UN <details> FERMÉ N'EFFACE PAS SON PANNEAU.
+     Dans Chrome, « ::details-content » en fait un bloc conteneur : le panneau
+     garde « display: grid » et une boîte réelle, absolument positionnée hors
+     de l'écran. Mesuré à 200 % de taille de texte : 172 px de débordement
+     venaient d'un menu que personne n'avait ouvert. On l'efface donc
+     explicitement tant que le tiroir est replié. */
+  .tiroir:not([open]) .tiroir__panneau { display: none; }
+
   .tiroir__panneau {
     position: absolute; right: 0; top: calc(100% + 0.6rem);
-    display: grid; gap: 0.25rem; min-width: 13rem;
+    display: grid; gap: 0.25rem;
+    /* 13 rem valent 416 px à 200 % de taille de texte, pour un écran de 390 :
+       la largeur minimale doit céder avant l'écran. */
+    min-width: min(13rem, calc(100vw - 2rem));
+    max-width: calc(100vw - 2rem);
     background: var(--fond); border: 1px solid var(--trait);
     border-radius: var(--rayon); padding: 0.5rem;
     box-shadow: 0 12px 32px rgb(22 36 46 / 0.10);

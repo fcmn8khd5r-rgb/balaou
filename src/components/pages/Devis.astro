@@ -1,0 +1,163 @@
+---
+import Base from '../../layouts/Base.astro';
+import contenu from '../../data/contenu.json';
+import { t, lienWhatsapp, type Lang } from '../../i18n';
+
+interface Props { langue: Lang }
+const { langue } = Astro.props;
+const u = contenu.ui;
+const d = contenu.devis;
+const sortie = contenu.sorties.find((s) => s.surDevis)!;
+---
+
+<Base langue={langue} page="devis"
+      titre={t(contenu.pages.devis.titre, langue)}
+      description={t(contenu.pages.devis.description, langue)}>
+
+  <section class="section">
+    <div class="coque">
+      <div class="bande">
+        <p class="bande__rail">{t(d.rail, langue)}</p>
+        <h1 class="bande__titre">{t(d.titre, langue)}</h1>
+        <p class="bande__lead">{t(d.intro, langue)}</p>
+      </div>
+
+      <div class="devis">
+        <form class="formulaire" method="post" action="/api/devis">
+          <input type="hidden" name="langue" value={langue} />
+          {/* Champ piège : un robot le remplit, une personne ne le voit pas. */}
+          <p class="piege" aria-hidden="true">
+            <label>Ne rien écrire ici <input type="text" name="site" tabindex="-1" autocomplete="off" /></label>
+          </p>
+
+          <div class="rangee">
+            <label class="bloc">
+              <span class="bloc__intitule">{t(d.champs.nom, langue)}</span>
+              <input type="text" name="nom" required autocomplete="name" />
+            </label>
+            <label class="bloc">
+              <span class="bloc__intitule">{t(d.champs.courriel, langue)}</span>
+              <input type="email" name="courriel" required autocomplete="email" inputmode="email" />
+            </label>
+          </div>
+
+          <div class="rangee">
+            <label class="bloc">
+              <span class="bloc__intitule">
+                {t(d.champs.telephone, langue)} <em>{t(d.facultatif, langue)}</em>
+              </span>
+              <input type="tel" name="telephone" autocomplete="tel" inputmode="tel" />
+            </label>
+            <label class="bloc">
+              <span class="bloc__intitule">{t(d.champs.date, langue)}</span>
+              <input type="date" name="date" required />
+            </label>
+          </div>
+
+          <div class="rangee">
+            <label class="bloc">
+              <span class="bloc__intitule">{t(d.champs.personnes, langue)}</span>
+              <input type="number" name="personnes" min="1" max={sortie.capacite} value="8" required inputmode="numeric" />
+            </label>
+            <label class="bloc">
+              <span class="bloc__intitule">{t(d.champs.occasion, langue)}</span>
+              <select name="occasion" required>
+                {d.occasions.map((o) => <option value={t(o, langue)}>{t(o, langue)}</option>)}
+              </select>
+            </label>
+          </div>
+
+          <label class="bloc">
+            <span class="bloc__intitule">{t(d.champs.message, langue)}</span>
+            <textarea name="message" rows="5"
+                      placeholder="La date, l'heure, l'itinéraire qui vous ferait envie, la table…"></textarea>
+          </label>
+
+          <label class="consentement">
+            <input type="checkbox" name="consentement" required />
+            <span>{t(d.consentement, langue)}</span>
+          </label>
+
+          <button class="btn btn--plein formulaire__envoyer" type="submit">{t(u.envoyer, langue)}</button>
+          <p class="formulaire__mention">{t(d.mention, langue)}</p>
+        </form>
+
+        <aside class="cote">
+          <h2 class="cote__titre">{t(u.inclus, langue)}</h2>
+          <ul class="cote__liste">
+            {sortie.inclus.map((i) => <li>{t(i, langue)}</li>)}
+          </ul>
+          <dl class="cote__faits">
+            <div><dt>{t(u.duree, langue)}</dt><dd>{t(sortie.duree, langue)}</dd></div>
+            <div><dt>{t(u.places, langue)}</dt><dd>{t(u.jusqua, langue)} {sortie.capacite}</dd></div>
+            <div><dt>{t(u.rdv, langue)}</dt><dd>{t(sortie.rdv, langue)}</dd></div>
+          </dl>
+          <a class="btn btn--vert cote__wa" href={lienWhatsapp(langue)} rel="noopener">{t(u.ecrire, langue)}</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .devis { display: grid; gap: var(--sp-bloc) clamp(2rem, 4vw, 3rem); align-items: start; }
+  @media (min-width: 60rem) { .devis { grid-template-columns: 1fr 20rem; } }
+
+  .formulaire { display: grid; gap: 1rem; }
+  .piege { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .rangee { display: grid; gap: 1rem; }
+  @media (min-width: 34rem) { .rangee { grid-template-columns: 1fr 1fr; } }
+
+  .bloc { display: grid; gap: 0.4rem; min-width: 0; }
+  .bloc__intitule {
+    font-family: var(--titre); font-size: var(--t-rail); font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--encre-3);
+  }
+  /* Pas d'opacité ici : appliquée à « encre-3 », elle ramenait ce mot à 3,78
+     pour un seuil de 4,5. La couleur est donc choisie, non atténuée. */
+  .bloc__intitule em { font-style: normal; text-transform: none; letter-spacing: 0; }
+
+  .bloc :is(input, select, textarea) {
+    width: 100%; min-width: 0; min-height: 2.75rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--trait-fort); border-radius: 0.5rem;
+    background: var(--fond); color: var(--encre);
+  }
+  .bloc textarea { min-height: 8rem; resize: vertical; line-height: 1.5; }
+  .bloc :is(input, select, textarea):focus-visible { border-color: var(--lagon); }
+
+  .consentement {
+    display: flex; gap: 0.7rem; align-items: flex-start;
+    padding: 0.85rem 1rem; border: 1px solid var(--trait); border-radius: var(--rayon);
+    background: var(--surface); min-height: 2.75rem;
+  }
+  .consentement input { accent-color: var(--lagon); width: 1.15rem; height: 1.15rem; flex: none; margin-top: 0.2rem; }
+  .consentement span { min-width: 0; overflow-wrap: anywhere; }
+
+  .formulaire__envoyer { justify-self: start; }
+  .formulaire__mention { color: var(--encre-3); font-size: var(--t-petit); max-width: var(--mesure); }
+
+  .cote {
+    border: 1px solid var(--trait); border-radius: var(--rayon);
+    padding: 1.25rem; background: var(--surface);
+  }
+  .cote__titre, .cote__faits dt {
+    font-family: var(--titre); font-size: var(--t-rail); font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--encre-3);
+  }
+  .cote__liste { list-style: none; padding: 0; margin: 0.85rem 0 0; display: grid; gap: 0.5rem; }
+  .cote__liste li { position: relative; padding-left: 1.5rem; min-width: 0; overflow-wrap: anywhere; }
+  .cote__liste li::before {
+    content: ''; position: absolute; left: 0; top: 0.62em;
+    width: 0.75rem; height: 0.4rem;
+    border-left: 2px solid var(--lagon); border-bottom: 2px solid var(--lagon);
+    transform: rotate(-45deg);
+  }
+  .cote__faits {
+    display: grid; gap: 0.75rem; margin-top: 1.25rem;
+    padding-top: 1.25rem; border-top: 1px solid var(--trait-fort);
+  }
+  .cote__faits dd { margin-top: 0.15rem; overflow-wrap: anywhere; }
+  .cote__wa { width: 100%; margin-top: 1.25rem; }
+</style>

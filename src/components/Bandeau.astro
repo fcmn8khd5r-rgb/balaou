@@ -14,10 +14,10 @@ interface Props { langue: Lang }
 const { langue } = Astro.props;
 ---
 
-<p class="bandeau">
+<aside class="bandeau" aria-label={t(contenu.demo.court, langue)}>
   <span class="bandeau__long">{t(contenu.demo.bandeau, langue)}</span>
   <span class="bandeau__court">{t(contenu.demo.court, langue)}</span>
-</p>
+</aside>
 
 <style>
   .bandeau {

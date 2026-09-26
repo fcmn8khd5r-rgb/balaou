@@ -30,7 +30,13 @@ const u = contenu.ui;
 <style>
   .basse {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
-    display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;
+    display: grid;
+    /* DEUX COLONNES TANT QU'ELLES TIENNENT, UNE ENSUITE. À 200 % de taille de
+       texte, « WhatsApp » et son icône réclament 234 px quand la moitié de
+       l'écran en offre 151 : les boutons sortaient de l'écran de 172 px.
+       « minmax(min(10rem, 100 %), 1fr) » les empile d'eux-mêmes. */
+    grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+    gap: 0.5rem;
     padding: 0.55rem var(--marge);
     padding-bottom: calc(0.55rem + env(safe-area-inset-bottom, 0px));
     background: var(--fond);
