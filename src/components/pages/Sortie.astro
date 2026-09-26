@@ -35,7 +35,7 @@ const prix = sortie.surDevis
               {prix ? <>{prix} <span>{t(u.parPersonne, langue)}</span></> : t(u.surDevis, langue)}
             </dd></div>
             <div><dt>{t(u.places, langue)}</dt><dd>
-              {sortie.surDevis ? <>{t(u.jusqua, langue)} {sortie.capacite}</> : sortie.capacite}
+              {sortie.surDevis ? `${t(u.jusqua, langue)} ${sortie.capacite}` : sortie.capacite}
             </dd></div>
             <div class="faits__large"><dt>{t(u.rdv, langue)}</dt><dd>{t(sortie.rdv, langue)}</dd></div>
           </dl>

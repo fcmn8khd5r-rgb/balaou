@@ -12,15 +12,19 @@ await mkdir(SORTIE, { recursive: true });
 
 const PAGES = [
   ['accueil', '/'],
-  ['sortie', '/sorties/lagon-et-ilets/'],
+  ['sorties', '/sorties/'],
+  ['privatisation', '/sorties/privatisation/'],
   ['reserver', '/reserver/'],
+  ['devis', '/devis/'],
+  ['galerie', '/galerie/'],
+  ['anglais', '/en/'],
 ];
 const ECRANS = [
   ['telephone', 390, 844, 3],
   ['ordinateur', 1440, 900, 2],
 ];
 
-const nav = await chromium.launch();
+const nav = await chromium.launch({ args: ['--lang=fr-FR'] });
 for (const [nomEcran, l, h, echelle] of ECRANS) {
   const ctx = await nav.newContext({
     viewport: { width: l, height: h },
