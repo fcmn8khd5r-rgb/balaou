@@ -12,7 +12,7 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# Le site appelle /api/disponibilites et /api/acompte. Les fonctions Netlify ne
+# Le site appelle /api/disponibilites, /api/acompte et /api/devis. Les fonctions Netlify ne
 # répondent qu'à /.netlify/functions/<nom> : sans cette redirection, le
 # calendrier reste vide et l'acompte échoue UNE FOIS EN LIGNE, alors que tout
 # fonctionne en local où le serveur de développement fait la correspondance.
