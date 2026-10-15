@@ -8,7 +8,7 @@ import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 const RACINE = path.resolve(import.meta.dirname, '../dist');
-const PORT = Number(process.env.PORT || 4455);
+const PORT = Number(process.env.PORT || 4466);
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8', '.json': 'application/json',
