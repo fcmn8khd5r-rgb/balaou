@@ -24,7 +24,7 @@ const nav = await chromium.launch();
   const barre = page.locator('.basse');
   dire(await barre.isVisible(), 'barre basse présente sur téléphone');
   const wa = await page.locator('.basse a[href^="https://wa.me/"]').getAttribute('href');
-  dire(!!wa && wa.includes('590690305037') && wa.includes('d%C3%A9monstration'),
+  dire(!!wa && wa.includes('590690916809') && wa.includes('d%C3%A9monstration'),
        'WhatsApp : numéro et message pré-rempli');
 
   /* Le menu est un <details> : il s'ouvre par un clic, et son contenu existe
